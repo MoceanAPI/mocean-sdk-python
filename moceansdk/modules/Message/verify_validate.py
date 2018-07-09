@@ -1,4 +1,4 @@
-from mocean.modules.abstract import MoceanFactory,Transmitter
+from moceansdk.modules.abstract import MoceanFactory,Transmitter
 
 class Verify_validate(MoceanFactory):
     
@@ -11,8 +11,8 @@ class Verify_validate(MoceanFactory):
         self.params['mocean-reqid'] = param
         return self
     
-    def setOtpCode(self,param):
-        self.params['mocean-otp-code'] = param
+    def setCode(self,param):
+        self.params['mocean-code'] = param
         return self
     
     def setRespForamt(self,param):

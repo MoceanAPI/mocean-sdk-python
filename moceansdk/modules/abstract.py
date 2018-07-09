@@ -7,7 +7,7 @@ class MoceanFactory(object):
     
     def __init__(self,obj_auth):
         self.params = dict(zip(['mocean-api-key','mocean-api-secret'],[obj_auth.username,obj_auth.password]))
-        self.domain = "https://rest-api.moceansms.com"
+        self.domain = "https://rest.moceanapi.com"
         pass
     
     def create(self,params = {}):

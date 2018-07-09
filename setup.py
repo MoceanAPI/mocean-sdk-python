@@ -6,14 +6,14 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
 	name='moceansdk',
-    version='0.1.4',
+    version='0.1.10',
 	description='Nexmo Client Library for Python',
 	long_description='This is a Mocean SDK written in python, to use it you will need a mocean account. Signup for free at https://moceanapi.com',
 	url='https://github.com/MoceanAPI/mocean-sdk-python',
 	author='Micro Ocean Technologies Sdn Bhd',
 	author_email='support@moceanapi.com',
 	license='MIT',
-	packages=['moceansdk'],
+	packages= setuptools.find_packages(),
 	platforms=['any'],
 	classifiers=[
 		'Programming Language :: Python',
