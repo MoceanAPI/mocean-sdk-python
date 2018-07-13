@@ -55,6 +55,7 @@ class Transmitter(object):
     
     def __init__(self,method: str,url,params):
        
+        params['mocean-medium'] = 'PYTHON-SDK' 
         self.url = url
         if method.lower() == 'post':
             self.response = self.__post(url, params)
@@ -85,13 +86,14 @@ class Transmitter(object):
     
     def getResponse(self):
    
-        if self.response.status_code == 401:
-            raise Exception("Getting error %s from url %"%(self.response.status_code,self.url))
-        elif self.response.status_code == 204:
-            return None
-        elif 200 <= self.response.status_code < 300:
-            return self.response.text
-        elif 400 <= self.response.status_code < 500:
-            raise Exception("Getting error %s from url %"%(self.response.status_code,self.url))
-        elif 500 <= self.response.status_code < 600:
-            raise Exception("Getting error %s from url %"%(self.response.status_code,self.url))
+        return self.response.text
+#         if self.response.status_code == 401:
+#             raise Exception("Getting error %s from url %"%(self.response.status_code,self.url))
+#         elif self.response.status_code == 204:
+#             return None
+#         elif 200 <= self.response.status_code < 300:
+#             
+#         elif 400 <= self.response.status_code < 500:
+#             raise Exception("Getting error %s from url %"%(self.response.status_code,self.url))
+#         elif 500 <= self.response.status_code < 600:
+#             raise Exception("Getting error %s from url %"%(self.response.status_code,self.url))
