@@ -1,4 +1,4 @@
-from mocean.modules.abstract import MoceanFactory,Transmitter
+from moceansdk.modules.abstract import MoceanFactory,Transmitter
 
 class Pricing(MoceanFactory):
     
@@ -8,23 +8,14 @@ class Pricing(MoceanFactory):
         pass
     
     def setMcc(self,param):
-        """
-        User can specify to get pricing for a particular Mobile Country Code (MCC).
-        """
         self.params['mocean-mcc'] = param
         return self
     
     def setMnc(self,param):
-        """   
-        Mobile Network Code (MNC) needs to be specified if user passes in mocean-mcc. User is allowed to pass ONE MNC only per query.
-        """
         self.params['mocean-mnc'] = param
         return self
     
     def setDelimiter(self,param):
-        """  
-        Delimiter to be used in CSV format. By default, delimiter is set to “;”. User can specify to set delimiter to “;”, “:” or “|” only.
-        """
         self.params['mocean-delimiter'] = param
         return self
 

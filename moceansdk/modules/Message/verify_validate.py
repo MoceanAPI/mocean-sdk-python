@@ -2,9 +2,9 @@ from moceansdk.modules.abstract import MoceanFactory,Transmitter
 
 class Verify_validate(MoceanFactory):
     
-    def __init__(self,obj_aut):
+    def __init__(self,obj_auth):
         super(Verify_validate,self).__init__(obj_auth)
-        self.required_fields = ['mocean-api-key','mocean-api-secret','mocean-reqid','mocean-otp-code']
+        self.required_fields = ['mocean-api-key','mocean-api-secret','mocean-reqid','mocean-code']
         pass
 
     def setReqid(self,param):
@@ -27,6 +27,6 @@ class Verify_validate(MoceanFactory):
         self.createFinalParams()
         if self.isRequiredFieldSet():
             response = Transmitter(url = self.domain+"/rest/1/verify/check",method='post',params = self.params)
-            return response.getResponse()
+            return self.createResponse(response.getResponse())
     pass
         

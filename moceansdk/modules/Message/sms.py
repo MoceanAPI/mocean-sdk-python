@@ -1,4 +1,4 @@
-from mocean.modules.abstract import MoceanFactory,Transmitter
+from moceansdk.modules.abstract import MoceanFactory,Transmitter
 
 class SMS(MoceanFactory):
     

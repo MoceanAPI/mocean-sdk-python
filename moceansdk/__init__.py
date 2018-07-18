@@ -5,9 +5,9 @@ name = "moceansdk"
 
 class Client(object):
     
-    def __init__(self,**kwargs): 
-        self.username = kwargs.get('api_key')
-        self.password = kwargs.get('api_secret')
+    def __init__(self,api_key,api_secret): 
+        self.username = api_key
+        self.password = api_secret
         pass
     
     
@@ -38,11 +38,11 @@ class Mocean(object):
     
     @property
     def sms(self):
-        from mocean.modules.Message.sms import SMS
+        from moceansdk.modules.Message.sms import SMS
         return SMS(self.obj_auth)
     @property
     def flashSms(self):
-        from mocean.modules.Message.sms import SMS
+        from moceansdk.modules.Message.sms import SMS
         _sms = SMS(self.obj_auth)
         _sms.flash_message = 1
         return _sms
@@ -54,27 +54,27 @@ class Mocean(object):
 
     @property
     def balance(self):
-        import modules.Account.balance as module 
-        return module.Balance(self.obj_auth)
+        from moceansdk.modules.Account.balance import Balance
+        return Balance(self.obj_auth)
     
     @property
     def price_list(self):
-        import modules.Account.pricing as module
-        return module.Pricing(self.obj_auth)
+        from moceansdk.modules.Account.pricing import Pricing
+        return Pricing(self.obj_auth)
     
     @property
     def message_status(self):
-        import modules.Message.message_status as module
-        return module.Messsage_status(self.obj_auth)
+        from moceansdk.modules.Message.message_status import Messsage_status
+        return Messsage_status(self.obj_auth)
     
     @property
     def verify_request(self):
-        import modules.Message.verify_request as module
-        return module.Verify_request(self.obj_auth)
+        from moceansdk.modules.Message.verify_request import Verify_request
+        return Verify_request(self.obj_auth)
 
     @property
     def verify_validate(self):
-        import modules.Message.verify_validate as module
-        return module.Verify_validate(self.obj_auth)
+        from moceansdk.modules.Message.verify_validate import Verify_validate
+        return Verify_validate(self.obj_auth)
     
     

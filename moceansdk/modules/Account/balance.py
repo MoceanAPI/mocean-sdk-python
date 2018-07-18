@@ -1,4 +1,4 @@
-from mocean.modules.abstract import MoceanFactory,Transmitter
+from moceansdk.modules.abstract import MoceanFactory,Transmitter
 class Balance(MoceanFactory):
     
     def __init__(self,obj_auth):

@@ -1,9 +1,9 @@
-from mocean.modules.abstract import MoceanFactory,Transmitter
+from moceansdk.modules.abstract import MoceanFactory,Transmitter
 class Messsage_status(MoceanFactory):
     
     def __init__(self,obj_auth):
         super(Messsage_status,self).__init__(obj_auth)
-        self.required_fields['mocean-api-key','mocean-api-secret','mocean-msgid']
+        self.required_fields = ['mocean-api-key','mocean-api-secret','mocean-msgid']
         pass
     
     def setMsgid(self,param):

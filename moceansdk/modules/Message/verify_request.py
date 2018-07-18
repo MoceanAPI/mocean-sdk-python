@@ -1,4 +1,4 @@
-from mocean.modules.abstract import MoceanFactory,Transmitter
+from moceansdk.modules.abstract import MoceanFactory,Transmitter
 
 class Verify_request(MoceanFactory):
     
@@ -47,6 +47,6 @@ class Verify_request(MoceanFactory):
         self.createFinalParams()
         if self.isRequiredFieldSet():
             response = Transmitter(url = self.domain+"/rest/1/verify/req",method="post",params = self.params)
-            return response
+            return self.createResponse(response.getResponse())
     
     pass
