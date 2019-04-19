@@ -76,5 +76,8 @@ class Mocean(object):
     def verify_validate(self):
         from moceansdk.modules.Message.verify_validate import Verify_validate
         return Verify_validate(self.obj_auth)
-    
-    
+
+    @property
+    def number_lookup(self):
+        from moceansdk.modules.NumberLookup.number_lookup import NumberLookup
+        return NumberLookup(self.obj_auth)
