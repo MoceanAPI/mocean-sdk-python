@@ -1,3 +1,4 @@
+from moceansdk.modules.Message.charge_type import ChargeType
 from moceansdk.modules.abstract import MoceanFactory,Transmitter
 
 class Verify_request(MoceanFactory):
@@ -5,6 +6,7 @@ class Verify_request(MoceanFactory):
     def __init__(self,obj_auth):
         super(Verify_request,self).__init__(obj_auth)
         self.required_fields = ['mocean-api-key','mocean-api-secret','mocean-to','mocean-brand']
+        self.chargeType = ChargeType.CHARGE_PER_CONVERSION
         pass
     
     def setTo(self,param):
@@ -38,6 +40,10 @@ class Verify_request(MoceanFactory):
     def setRespFormat(self,param):
         self.params['mocean-resp-format'] = param
         return self
+
+    def sendAs(self, charge_type):
+        self.chargeType = charge_type
+        return self
     
     def create(self,params):
         super(Verify_request,self).create(params)
@@ -46,7 +52,10 @@ class Verify_request(MoceanFactory):
     def send(self):
         self.createFinalParams()
         if self.isRequiredFieldSet():
-            response = Transmitter(url = self.domain+"/rest/1/verify/req",method="post",params = self.params)
+            verifyRequestUrl = "/rest/1/verify/req"
+            if self.chargeType == ChargeType.CHARGE_PER_ATTEMPT:
+                verifyRequestUrl += "/sms"
+            response = Transmitter(url = self.domain+verifyRequestUrl,method="post",params = self.params)
             return self.createResponse(response.getResponse())
     
     pass
