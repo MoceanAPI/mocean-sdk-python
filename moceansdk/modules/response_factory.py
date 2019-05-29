@@ -1,6 +1,5 @@
 import json
 import xmltodict
-from json import JSONDecodeError
 from dotmap import DotMap
 
 from moceansdk import MoceanErrorException
@@ -8,10 +7,10 @@ from moceansdk import MoceanErrorException
 
 class ResponseFactory:
     @staticmethod
-    def create_object_from_raw_response(raw_response: str):
+    def create_object_from_raw_response(raw_response):
         try:
             dict_res = json.loads(raw_response, parse_float=lambda f: f, parse_int=lambda i: i)
-        except JSONDecodeError:
+        except Exception:
             try:
                 dict_res = xmltodict.parse(raw_response, 'UTF-8')
                 dict_res = dict_res['result']

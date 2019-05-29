@@ -1,11 +1,10 @@
 from moceansdk.modules.message.charge_type import ChargeType
-from moceansdk.auth import AbstractAuth
-from moceansdk.modules import AbstractClient, Transmitter
+from moceansdk.modules import AbstractClient
 
 
 class VerifyRequest(AbstractClient):
 
-    def __init__(self, obj_auth: AbstractAuth, transmitter: Transmitter):
+    def __init__(self, obj_auth, transmitter):
         super(VerifyRequest, self).__init__(obj_auth, transmitter)
         self._required_fields = ['mocean-api-key', 'mocean-api-secret', 'mocean-to', 'mocean-brand']
         self.chargeType = ChargeType.CHARGE_PER_CONVERSION

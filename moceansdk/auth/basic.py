@@ -6,20 +6,10 @@ class Basic(AbstractAuth):
         self._api_key = api_key
         self._api_secret = api_secret
 
-    @property
-    def api_key(self):
-        return self._api_key
-
-    @api_key.setter
-    def api_key(self, value):
+    def set_api_key(self, value):
         self._api_key = value
 
-    @property
-    def api_secret(self):
-        return self._api_secret
-
-    @api_secret.setter
-    def api_secret(self, value):
+    def set_api_secret(self, value):
         self._api_secret = value
 
     def get_auth_method(self):

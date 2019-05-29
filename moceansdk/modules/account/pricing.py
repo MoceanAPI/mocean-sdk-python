@@ -1,10 +1,9 @@
-from moceansdk.auth import AbstractAuth
-from moceansdk.modules import AbstractClient, Transmitter
+from moceansdk.modules import AbstractClient
 
 
 class Pricing(AbstractClient):
 
-    def __init__(self, obj_auth: AbstractAuth, transmitter: Transmitter):
+    def __init__(self, obj_auth, transmitter):
         super(Pricing, self).__init__(obj_auth, transmitter)
         self._required_fields = ['mocean-api-key', 'mocean-api-secret']
 

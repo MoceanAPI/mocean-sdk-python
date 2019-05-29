@@ -1,4 +1,3 @@
-import sys
 import requests
 
 from moceansdk.exceptions import MoceanErrorException
@@ -7,14 +6,11 @@ from moceansdk.modules import ResponseFactory
 
 class Transmitter(object):
 
-    def __init__(self, options: dict = None):
+    def __init__(self, options=None):
         self._options = self.default_options()
 
         if options is not None:
-            if sys.version_info[0] == 3:
-                self._options = {**self._options, **options}
-            else:
-                self._options.update(dict(options))
+            self._options.update(dict(options))
 
     def default_options(self):
         return {
@@ -22,13 +18,13 @@ class Transmitter(object):
             "version": "1"
         }
 
-    def get(self, uri: str, params: dict):
+    def get(self, uri, params):
         return self.send('get', uri, params)
 
-    def post(self, uri: str, params: dict):
+    def post(self, uri, params):
         return self.send('post', uri, params)
 
-    def send(self, method: str, uri: str, params: dict):
+    def send(self, method, uri, params):
         params['mocean-medium'] = 'PYTHON-SDK'
 
         # use json if default not set

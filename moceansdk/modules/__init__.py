@@ -1,25 +1,20 @@
-import sys
 import re
 
 from moceansdk import RequiredFieldException
-from moceansdk.auth import AbstractAuth
 from moceansdk.modules.response_factory import ResponseFactory
 from moceansdk.modules.transmitter import Transmitter
 
 
 class AbstractClient(object):
 
-    def __init__(self, obj_auth: AbstractAuth, transmitter: Transmitter):
+    def __init__(self, obj_auth, transmitter):
         self._params = obj_auth.get_params()
         self._transmitter = transmitter
         self._required_fields = ['mocean-api-key', 'mocean-api-secret']
 
-    def create(self, params: dict = {}):
+    def create(self, params={}):
         if isinstance(params, dict):
-            if sys.version_info[0] == 3:
-                self._params = {**self._params, **params}
-            else:
-                self._params.update(dict(params))
+            self._params.update(dict(params))
 
     def create_final_params(self):
         tmp_params = dict()

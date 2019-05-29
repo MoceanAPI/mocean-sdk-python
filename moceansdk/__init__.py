@@ -10,7 +10,7 @@ name = "moceansdk"
 
 class Client(object):
 
-    def __init__(self, obj_auth: AbstractAuth, options=None):
+    def __init__(self, obj_auth, options=None):
         if not isinstance(obj_auth, AbstractAuth):
             raise MoceanErrorException("auth object must extend AbstractAuth")
 
