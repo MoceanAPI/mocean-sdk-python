@@ -1,5 +1,6 @@
 from unittest import TestCase
 from mockito import when, ANY, verify, unstub
+from moceansdk.modules.message.channel import Channel
 from moceansdk.modules.transmitter import Transmitter
 from tests.testing_utils import TestingUtils
 
@@ -55,6 +56,37 @@ class TestVerifyRequest(TestCase):
                          }))
 
         verify(transmitter_mock, times=1).send('post', '/verify/req', ANY)
+
+        unstub()
+
+    def test_send_as_sms_channel(self):
+        transmitter_mock = Transmitter()
+        when(transmitter_mock).send(ANY, ANY, ANY).thenReturn('testing only')
+
+        client = TestingUtils.get_client_obj(transmitter_mock)
+        verify_request = client.verify_request
+        self.assertEqual(verify_request._channel, Channel.AUTO)
+        verify_request.send_as(Channel.SMS)
+        self.assertEqual(verify_request._channel, Channel.SMS)
+        verify_request.send({
+            'mocean-to': 'testing to',
+            'mocean-brand': 'testing brand'
+        })
+
+        verify(transmitter_mock, times=1).send('post', '/verify/req/sms', ANY)
+
+        unstub()
+
+    def test_resend(self):
+        transmitter_mock = Transmitter()
+        when(transmitter_mock).send(ANY, ANY, ANY).thenReturn('testing only')
+
+        client = TestingUtils.get_client_obj(transmitter_mock)
+        client.verify_request.resend({
+            'mocean-reqid': 'testing req id'
+        })
+
+        verify(transmitter_mock, times=1).send('post', '/verify/resend/sms', ANY)
 
         unstub()
 

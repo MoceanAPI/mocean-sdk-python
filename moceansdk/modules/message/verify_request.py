@@ -1,4 +1,4 @@
-from moceansdk.modules.message.charge_type import ChargeType
+from moceansdk.modules.message.channel import Channel
 from moceansdk.modules import AbstractClient
 
 
@@ -7,7 +7,8 @@ class VerifyRequest(AbstractClient):
     def __init__(self, obj_auth, transmitter):
         super(VerifyRequest, self).__init__(obj_auth, transmitter)
         self._required_fields = ['mocean-api-key', 'mocean-api-secret', 'mocean-to', 'mocean-brand']
-        self.chargeType = ChargeType.CHARGE_PER_CONVERSION
+        self._channel = Channel.AUTO
+        self.__is_resend = False
 
     def set_to(self, param):
         self._params['mocean-to'] = param
@@ -41,8 +42,8 @@ class VerifyRequest(AbstractClient):
         self._params['mocean-resp-format'] = param
         return self
 
-    def send_as(self, charge_type):
-        self.chargeType = charge_type
+    def send_as(self, channel):
+        self._channel = channel
         return self
 
     def send(self, params=None):
@@ -53,9 +54,21 @@ class VerifyRequest(AbstractClient):
         self.create_final_params()
         self.is_required_field_set()
 
-        verify_request_url = "/verify/req"
-        if self.chargeType == ChargeType.CHARGE_PER_ATTEMPT:
+        verify_request_url = "/verify"
+        if self.__is_resend:
+            verify_request_url += '/resend'
+        else:
+            verify_request_url += '/req'
+
+        if self._channel == Channel.SMS:
             verify_request_url += "/sms"
 
         response = self._transmitter.post(verify_request_url, self._params)
         return response
+
+    def resend(self, params=None):
+        self.send_as(Channel.SMS)
+        self.__is_resend = True
+        self._required_fields = ['mocean-api-key', 'mocean-api-secret', 'mocean-reqid']
+
+        return self.send(params)
