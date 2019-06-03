@@ -43,7 +43,7 @@ class TestBalance(TestCase):
         with open(TestingUtils.get_resource_file_path('balance.xml'), 'r') as file_handler:
             file_content = ''.join(file_handler.read().splitlines())
             transmitter_mock = Transmitter()
-            when(transmitter_mock).send(ANY, ANY, ANY).thenReturn(transmitter_mock.format_response(file_content))
+            when(transmitter_mock).send(ANY, ANY, ANY).thenReturn(transmitter_mock.format_response(file_content, True))
 
             client = TestingUtils.get_client_obj(transmitter_mock)
             res = client.balance.inquiry()

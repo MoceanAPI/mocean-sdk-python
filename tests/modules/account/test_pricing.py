@@ -55,9 +55,24 @@ class TestPricing(TestCase):
     def test_xml_response(self):
         with open(TestingUtils.get_resource_file_path('price.xml'), 'r') as file_handler:
             file_content = ''.join(file_handler.read().splitlines())
-            transmitter_mock = Transmitter()
+            transmitter_mock = Transmitter({'version': '1'})
             when(transmitter_mock).send(ANY, ANY, ANY).thenReturn(
-                transmitter_mock.format_response(file_content, '/account/pricing')
+                transmitter_mock.format_response(file_content, '/account/pricing', True)
+            )
+
+            client = TestingUtils.get_client_obj(transmitter_mock)
+            res = client.pricing.inquiry()
+
+            self.assertEqual(res.__str__(), file_content)
+            self.__test_object(res)
+
+        unstub()
+
+        with open(TestingUtils.get_resource_file_path('price_v2.xml'), 'r') as file_handler:
+            file_content = ''.join(file_handler.read().splitlines())
+            transmitter_mock = Transmitter({'version': '2'})
+            when(transmitter_mock).send(ANY, ANY, ANY).thenReturn(
+                transmitter_mock.format_response(file_content, '/account/pricing', True)
             )
 
             client = TestingUtils.get_client_obj(transmitter_mock)

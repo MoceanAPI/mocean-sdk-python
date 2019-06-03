@@ -100,9 +100,28 @@ class TestSms(TestCase):
     def test_xml_response(self):
         with open(TestingUtils.get_resource_file_path('message.xml'), 'r') as file_handler:
             file_content = ''.join(file_handler.read().splitlines())
-            transmitter_mock = Transmitter()
+            transmitter_mock = Transmitter({'version': '1'})
             when(transmitter_mock).send(ANY, ANY, ANY).thenReturn(
-                transmitter_mock.format_response(file_content, '/sms')
+                transmitter_mock.format_response(file_content, '/sms', True)
+            )
+
+            client = TestingUtils.get_client_obj(transmitter_mock)
+            res = client.sms.send({
+                'mocean-from': 'test from',
+                'mocean-to': 'test to',
+                'mocean-text': 'test text'
+            })
+
+            self.assertEqual(res.__str__(), file_content)
+            self.__test_object(res)
+
+        unstub()
+
+        with open(TestingUtils.get_resource_file_path('message_v2.xml'), 'r') as file_handler:
+            file_content = ''.join(file_handler.read().splitlines())
+            transmitter_mock = Transmitter({'version': '2'})
+            when(transmitter_mock).send(ANY, ANY, ANY).thenReturn(
+                transmitter_mock.format_response(file_content, '/sms', True)
             )
 
             client = TestingUtils.get_client_obj(transmitter_mock)
