@@ -1,6 +1,6 @@
 import os
 
-from moceansdk import Transmitter, Client, Basic
+from moceansdk import Client, Basic
 
 
 class TestingUtils(object):

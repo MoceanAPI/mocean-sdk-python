@@ -5,7 +5,8 @@ from moceansdk.modules.transmitter import Transmitter
 
 
 class TestTransmitter(TestCase):
-    def test_get_method(self):
+    @staticmethod
+    def test_get_method():
         transmitter_mock = Transmitter()
         when(transmitter_mock).send(ANY, ANY, ANY).thenReturn('testing only')
 
@@ -14,7 +15,8 @@ class TestTransmitter(TestCase):
 
         unstub()
 
-    def test_post_method(self):
+    @staticmethod
+    def test_post_method():
         transmitter_mock = Transmitter()
         when(transmitter_mock).send(ANY, ANY, ANY).thenReturn('testing only')
 

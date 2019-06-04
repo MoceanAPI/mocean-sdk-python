@@ -77,7 +77,8 @@ class TestVerifyRequest(TestCase):
 
         unstub()
 
-    def test_resend(self):
+    @staticmethod
+    def test_resend():
         transmitter_mock = Transmitter()
         when(transmitter_mock).send(ANY, ANY, ANY).thenReturn('testing only')
 

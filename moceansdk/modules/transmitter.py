@@ -12,7 +12,8 @@ class Transmitter(object):
         if options is not None:
             self._options.update(dict(options))
 
-    def default_options(self):
+    @staticmethod
+    def default_options():
         return {
             "base_url": "https://rest.moceanapi.com",
             "version": "1"

@@ -12,7 +12,10 @@ class AbstractClient(object):
         self._transmitter = transmitter
         self._required_fields = ['mocean-api-key', 'mocean-api-secret']
 
-    def create(self, params={}):
+    def create(self, params=None):
+        if params is None:
+            params = {}
+
         if isinstance(params, dict):
             self._params.update(dict(params))
 
