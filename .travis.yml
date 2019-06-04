@@ -13,8 +13,13 @@ matrix:
       sudo: true
 
 install:
+  - pip install codecov
+  - pip install coverage
   - pip install -e .[test]
   - pip install .
 
 script:
-  - python -m unittest discover
+  - coverage run -m unittest discover
+
+after_success:
+  - codecov
