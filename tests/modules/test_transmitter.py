@@ -35,7 +35,7 @@ class TestTransmitter(TestCase):
     def test_has_default_options(self):
         transmitter_mock = Transmitter()
         self.assertEqual(transmitter_mock._options['base_url'], 'https://rest.moceanapi.com')
-        self.assertEqual(transmitter_mock._options['version'], '1')
+        self.assertEqual(transmitter_mock._options['version'], '2')
 
     def test_custom_options(self):
         transmitter_mock = Transmitter({

@@ -23,7 +23,7 @@ class TestVerifyValidate(TestCase):
         self.assertIsNotNone(verify_validate._params["mocean-resp-format"])
         self.assertEqual("json", verify_validate._params["mocean-resp-format"])
 
-    def test_inquiry(self):
+    def test_send(self):
         transmitter_mock = Transmitter()
         when(transmitter_mock).send(ANY, ANY, ANY).thenReturn('testing only')
 

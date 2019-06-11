@@ -16,7 +16,7 @@ class Transmitter(object):
     def default_options():
         return {
             "base_url": "https://rest.moceanapi.com",
-            "version": "1"
+            "version": "2"
         }
 
     def get(self, uri, params):

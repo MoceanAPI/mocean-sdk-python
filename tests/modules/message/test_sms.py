@@ -15,6 +15,12 @@ class TestSms(TestCase):
         self.assertIsNotNone(sms._params["mocean-from"])
         self.assertEqual("test from", sms._params["mocean-from"])
 
+        sms.add_to("test to")
+        self.assertIsNotNone(sms._params["mocean-to"])
+        self.assertEqual("test to", sms._params["mocean-to"])
+        sms.add_to("another to")
+        self.assertEqual("test to,another to", sms._params["mocean-to"])
+
         sms.set_to("test to")
         self.assertIsNotNone(sms._params["mocean-to"])
         self.assertEqual("test to", sms._params["mocean-to"])
@@ -39,6 +45,7 @@ class TestSms(TestCase):
         self.assertIsNotNone(sms._params["mocean-dlr-url"])
         self.assertEqual("test dlr url", sms._params["mocean-dlr-url"])
 
+        self.assertRaises(ValueError, sms.set_schedule, "testing schedule")
         sms.set_schedule("2019-02-01")
         self.assertIsNotNone(sms._params["mocean-schedule"])
         self.assertEqual("2019-02-01", sms._params["mocean-schedule"])
@@ -63,7 +70,7 @@ class TestSms(TestCase):
         self.assertIsNotNone(sms._params["mocean-resp-format"])
         self.assertEqual("json", sms._params["mocean-resp-format"])
 
-    def test_inquiry(self):
+    def test_send(self):
         transmitter_mock = Transmitter()
         when(transmitter_mock).send(ANY, ANY, ANY).thenReturn('testing only')
 

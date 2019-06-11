@@ -27,5 +27,5 @@ class NumberLookup(AbstractClient):
         self.create_final_params()
         self.is_required_field_set()
 
-        response = self._transmitter.get('/nl', self._params)
+        response = self._transmitter.post('/nl', self._params)
         return response

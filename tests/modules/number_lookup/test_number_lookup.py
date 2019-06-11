@@ -32,7 +32,7 @@ class TestMessageStatus(TestCase):
             'mocean-to': 'test to'
         }))
 
-        verify(transmitter_mock, times=1).send('get', '/nl', ANY)
+        verify(transmitter_mock, times=1).send('post', '/nl', ANY)
 
         unstub()
 
