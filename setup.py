@@ -20,7 +20,7 @@ setuptools.setup(
     extras_require={
         'test': ['mockito~=1.1.0'],
     },
-    packages=setuptools.find_packages(),
+    packages=setuptools.find_packages(exclude=['tests', 'tests.*']),
     platforms=['any'],
     classifiers=[
         'Programming Language :: Python',
