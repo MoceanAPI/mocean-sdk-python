@@ -54,5 +54,6 @@ class TestBalance(TestCase):
         unstub()
 
     def __test_object(self, balance_response):
+        self.assertIsInstance(balance_response.toDict(), dict)
         self.assertEqual(balance_response.status, '0')
         self.assertEqual(balance_response.value, '100.0000')

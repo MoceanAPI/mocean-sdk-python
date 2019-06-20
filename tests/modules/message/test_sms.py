@@ -1,5 +1,7 @@
 from unittest import TestCase
-from mockito import when, ANY, verify, unstub
+from mockito import when, ANY, verify, unstub, arg_that
+
+from moceansdk import RequiredFieldException
 from moceansdk.modules.transmitter import Transmitter
 from tests.testing_utils import TestingUtils
 
@@ -75,14 +77,36 @@ class TestSms(TestCase):
         when(transmitter_mock).send(ANY, ANY, ANY).thenReturn('testing only')
 
         client = TestingUtils.get_client_obj(transmitter_mock)
+
+        # test is required field set
+        try:
+            client.sms.send()
+            self.fail()
+        except RequiredFieldException:
+            pass
+
         self.assertEqual('testing only',
-                         client.sms.send({
+                         client.sms.set_from('test from').set_to('test to').set_text('test text').send())
+
+        verify(transmitter_mock, times=1).send('post', '/sms', ANY)
+
+        unstub()
+
+    def test_send_flash_sms(self):
+        transmitter_mock = Transmitter()
+        when(transmitter_mock).send(ANY, ANY, ANY).thenReturn('testing only')
+
+        client = TestingUtils.get_client_obj(transmitter_mock)
+        self.assertEqual('testing only',
+                         client.flash_sms.send({
                              'mocean-from': 'test from',
                              'mocean-to': 'test to',
                              'mocean-text': 'test text'
                          }))
 
-        verify(transmitter_mock, times=1).send('post', '/sms', ANY)
+        verify(transmitter_mock, times=1).send('post', '/sms', arg_that(lambda arg: (
+                'mocean-mclass' in arg and 'mocean-alt-dcs' in arg
+        )))
 
         unstub()
 
@@ -144,6 +168,7 @@ class TestSms(TestCase):
         unstub()
 
     def __test_object(self, sms_response):
+        self.assertIsInstance(sms_response.toDict(), dict)
         self.assertEqual(sms_response.messages[0].status, '0')
         self.assertEqual(sms_response.messages[0].receiver, '60123456789')
         self.assertEqual(sms_response.messages[0].msgid, 'CPASS_restapi_C0000002737000000.0001')

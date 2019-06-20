@@ -1,5 +1,7 @@
 from unittest import TestCase
 from mockito import when, ANY, verify, unstub
+
+from moceansdk import RequiredFieldException
 from moceansdk.modules.transmitter import Transmitter
 from tests.testing_utils import TestingUtils
 
@@ -28,9 +30,15 @@ class TestMessageStatus(TestCase):
         when(transmitter_mock).send(ANY, ANY, ANY).thenReturn('testing only')
 
         client = TestingUtils.get_client_obj(transmitter_mock)
-        self.assertEqual('testing only', client.number_lookup.inquiry({
-            'mocean-to': 'test to'
-        }))
+
+        # test is required field set
+        try:
+            client.number_lookup.inquiry()
+            self.fail()
+        except RequiredFieldException:
+            pass
+
+        self.assertEqual('testing only', client.number_lookup.set_to('test to').inquiry())
 
         verify(transmitter_mock, times=1).send('post', '/nl', ANY)
 
@@ -71,6 +79,7 @@ class TestMessageStatus(TestCase):
         unstub()
 
     def __test_object(self, number_lookup_response):
+        self.assertIsInstance(number_lookup_response.toDict(), dict)
         self.assertEqual(number_lookup_response.status, '0')
         self.assertEqual(number_lookup_response.msgid, 'CPASS_restapi_C00000000000000.0002')
         self.assertEqual(number_lookup_response.to, '60123456789')

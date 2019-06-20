@@ -1,5 +1,7 @@
 from unittest import TestCase
 from mockito import when, ANY, verify, unstub
+
+from moceansdk import RequiredFieldException
 from moceansdk.modules.transmitter import Transmitter
 from tests.testing_utils import TestingUtils
 
@@ -28,11 +30,16 @@ class TestVerifyValidate(TestCase):
         when(transmitter_mock).send(ANY, ANY, ANY).thenReturn('testing only')
 
         client = TestingUtils.get_client_obj(transmitter_mock)
+
+        # test is required field set
+        try:
+            client.verify_validate.send()
+            self.fail()
+        except RequiredFieldException:
+            pass
+
         self.assertEqual('testing only',
-                         client.verify_validate.send({
-                             'mocean-reqid': 'test reqid',
-                             'mocean-code': 'test code'
-                         }))
+                         client.verify_validate.set_reqid('test reqid').set_code('test code').send())
 
         verify(transmitter_mock, times=1).send('post', '/verify/check', ANY)
 
@@ -75,8 +82,6 @@ class TestVerifyValidate(TestCase):
         unstub()
 
     def __test_object(self, verify_validate_response):
+        self.assertIsInstance(verify_validate_response.toDict(), dict)
         self.assertEqual(verify_validate_response.status, '0')
         self.assertEqual(verify_validate_response.reqid, 'CPASS_restapi_C0000002737000000.0002')
-        self.assertEqual(verify_validate_response.msgid, 'CPASS_restapi_C0000002737000000.0002')
-        self.assertEqual(verify_validate_response.price, '0.35')
-        self.assertEqual(verify_validate_response.currency, 'MYR')

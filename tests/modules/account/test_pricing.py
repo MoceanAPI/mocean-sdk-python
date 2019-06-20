@@ -84,6 +84,7 @@ class TestPricing(TestCase):
         unstub()
 
     def __test_object(self, pricing_response):
+        self.assertIsInstance(pricing_response.toDict(), dict)
         self.assertEqual(pricing_response.status, '0')
         self.assertEqual(len(pricing_response.destinations), 25)
         self.assertEqual(pricing_response.destinations[0].country, 'Default')

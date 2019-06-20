@@ -1,5 +1,7 @@
 from unittest import TestCase
 from mockito import when, ANY, verify, unstub
+
+from moceansdk import RequiredFieldException
 from moceansdk.modules.message.channel import Channel
 from moceansdk.modules.transmitter import Transmitter
 from tests.testing_utils import TestingUtils
@@ -49,11 +51,16 @@ class TestVerifyRequest(TestCase):
         when(transmitter_mock).send(ANY, ANY, ANY).thenReturn('testing only')
 
         client = TestingUtils.get_client_obj(transmitter_mock)
+
+        # test is required field set
+        try:
+            client.verify_request.send()
+            self.fail()
+        except RequiredFieldException:
+            pass
+
         self.assertEqual('testing only',
-                         client.verify_request.send({
-                             'mocean-to': 'test to',
-                             'mocean-brand': 'test brand'
-                         }))
+                         client.verify_request.set_to('test to').set_brand('test brand').send())
 
         verify(transmitter_mock, times=1).send('post', '/verify/req', ANY)
 
@@ -128,5 +135,6 @@ class TestVerifyRequest(TestCase):
         unstub()
 
     def __test_object(self, verify_request_response):
+        self.assertIsInstance(verify_request_response.toDict(), dict)
         self.assertEqual(verify_request_response.status, '0')
         self.assertEqual(verify_request_response.reqid, 'CPASS_restapi_C0000002737000000.0002')

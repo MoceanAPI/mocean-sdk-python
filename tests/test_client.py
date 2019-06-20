@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from moceansdk import Basic, RequiredFieldException, Client
+from moceansdk import Basic, RequiredFieldException, Client, MoceanErrorException, AbstractAuth
 
 
 class TestClient(TestCase):
@@ -20,3 +20,20 @@ class TestClient(TestCase):
             Client(self.basic)
         except Exception as ex:
             self.fail(ex)
+
+    def test_create_client_with_unsupported_auth(self):
+        self.assertRaises(MoceanErrorException, Client, 'test_args')
+
+        try:
+            Client(DummyCredential())
+            self.fail('created client with unsupported credential')
+        except MoceanErrorException as ex:
+            pass
+
+
+class DummyCredential(AbstractAuth):
+    def get_auth_method(self):
+        return 'dummy'
+
+    def get_params(self):
+        pass
