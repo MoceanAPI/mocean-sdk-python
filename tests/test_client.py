@@ -27,7 +27,7 @@ class TestClient(TestCase):
         try:
             Client(DummyCredential())
             self.fail('created client with unsupported credential')
-        except MoceanErrorException as ex:
+        except MoceanErrorException:
             pass
 
 

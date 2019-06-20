@@ -65,7 +65,7 @@ class Transmitter(object):
         )
 
         if 'status' in processed_response and processed_response['status'] != '0':
-            raise MoceanErrorException(processed_response['err_msg'], processed_response)
+            raise MoceanErrorException(processed_response['err_msg'], processed_response.set_raw_response(raw_response))
 
         # post process response
         if uri == '/account/pricing':
