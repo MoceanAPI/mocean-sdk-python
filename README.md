@@ -1,5 +1,10 @@
 MoceanAPI Client Library for Python 
 ============================
+[![Latest Stable Version](https://img.shields.io/pypi/v/moceansdk.svg)](https://pypi.org/project/moceansdk/)
+[![Build Status](https://img.shields.io/travis/com/MoceanAPI/mocean-sdk-python.svg)](https://travis-ci.com/MoceanAPI/mocean-sdk-python)
+[![codecov](https://img.shields.io/codecov/c/github/MoceanAPI/mocean-sdk-python.svg)](https://codecov.io/gh/MoceanAPI/mocean-sdk-python)
+[![codacy](https://img.shields.io/codacy/grade/791d4a619aaf4f8a97cf198aea4b2a5b.svg)](https://app.codacy.com/project/MoceanAPI/mocean-sdk-python/dashboard)
+[![license](https://img.shields.io/pypi/l/moceansdk.svg)](https://pypi.org/project/moceansdk/)
 
 This is the Python client library for use Mocean's API. To use this, you'll need a Mocean account. Sign up [for free at 
 moceanapi.com][signup].
@@ -23,33 +28,42 @@ pip install moceansdk
 Create a client with your API key and secret:
 
 ```python
-from mocean import Mocean, Client
+from moceansdk import Client, Basic
 
-token = Client("API_KEY_HERE", "API_SECRET_HERE")
-mocean = Mocean(token)
+credential = Basic("API_KEY_HERE", "API_SECRET_HERE")
+mocean = Client(credential)
 ```
 
 ## Example
 
-To use [Mocean's SMS API][doc_sms] to send an SMS message, call the `mocean.sms.create().send()` method.
+To use [Mocean's SMS API][doc_sms] to send an SMS message, call the `mocean.sms.send()` method.
 
 The API can be called directly, using a simple array of parameters, the keys match the [parameters of the API][doc_sms].
 
 ```python
-res = mocean.sms.create({
+res = mocean.sms.send({
     "mocean-from": "MOCEAN",
     "mocean-to": 60123456789,
     "mocean-text": "Hello World"
-}).send()
+})
 
 print(res)
 ```
-    
-The API response data can be accessed as array properties of the message. 
+
+### Responses
+
+For your convenient, the API response has been parsed to `dict` using [dotmap](https://github.com/drgrib/dotmap) package.
 
 ```python
-print("Sent message to {}. Message ID is {}".format(res.receiver, res.msgid))
+print(res)           # show full response string
+print(res.status)    # show response status, '0' in this case
+print(res['status']) # same as above
+
 ```
+
+## Documentation
+
+Kindly visit [MoceanApi Docs][doc_main] for more usage
 
 License
 -------
@@ -57,7 +71,6 @@ License
 This library is released under the [MIT License][license]
 
 [signup]: https://dashboard.moceanapi.com/register?medium=github&campaign=sdk-python
-[doc_sms]: https://docs.moceanapi.com/?python#send-sms
-[doc_inbound]: https://docs.moceanapi.com/?python#receive-sms
-[doc_verify]: https://docs.moceanapi.com/?python#overview-3
+[doc_main]: https://moceanapi.com/docs/?python
+[doc_sms]: https://moceanapi.com/docs/?python#send-sms
 [license]: LICENSE.txt
