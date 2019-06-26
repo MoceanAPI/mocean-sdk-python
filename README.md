@@ -3,7 +3,7 @@ MoceanAPI Client Library for Python
 [![Latest Stable Version](https://img.shields.io/pypi/v/moceansdk.svg)](https://pypi.org/project/moceansdk/)
 [![Build Status](https://img.shields.io/travis/com/MoceanAPI/mocean-sdk-python.svg)](https://travis-ci.com/MoceanAPI/mocean-sdk-python)
 [![codecov](https://img.shields.io/codecov/c/github/MoceanAPI/mocean-sdk-python.svg)](https://codecov.io/gh/MoceanAPI/mocean-sdk-python)
-[![codacy](https://img.shields.io/codacy/grade/791d4a619aaf4f8a97cf198aea4b2a5b.svg)](https://app.codacy.com/project/MoceanAPI/mocean-sdk-python/dashboard)
+[![codacy](https://img.shields.io/codacy/grade/7ec97a7559f146928875fdaf28e1882e.svg)](https://app.codacy.com/project/MoceanAPI/mocean-sdk-python/dashboard)
 [![license](https://img.shields.io/pypi/l/moceansdk.svg)](https://pypi.org/project/moceansdk/)
 
 This is the Python client library for use Mocean's API. To use this, you'll need a Mocean account. Sign up [for free at 
