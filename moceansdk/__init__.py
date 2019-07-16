@@ -4,6 +4,8 @@ from moceansdk.auth import AbstractAuth
 from moceansdk.auth.basic import Basic
 from moceansdk.exceptions import MoceanErrorException, RequiredFieldException
 from moceansdk.modules import Transmitter
+from moceansdk.modules.voice.mccc_builder import McccBuilder
+from moceansdk.modules.voice.mccc import Mccc
 
 name = "moceansdk"
 
@@ -67,3 +69,8 @@ class Client(object):
     def number_lookup(self):
         from moceansdk.modules.number_lookup.number_lookup import NumberLookup
         return NumberLookup(self._obj_auth, self._transmitter)
+
+    @property
+    def voice(self):
+        from moceansdk.modules.voice.voice import Voice
+        return Voice(self._obj_auth, self._transmitter)
