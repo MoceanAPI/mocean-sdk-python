@@ -1,7 +1,7 @@
 from moceansdk import RequiredFieldException
 
 
-class AbstractMccc:
+class AbstractMccc(object):
     def __init__(self, params=None):
         self._params = {}
 
