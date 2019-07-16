@@ -6,7 +6,7 @@ from moceansdk.modules.transmitter import Transmitter
 from tests.testing_utils import TestingUtils
 
 
-class TestMessageStatus(TestCase):
+class TestNumberLookup(TestCase):
     def setUp(self):
         self.client = TestingUtils.get_client_obj()
 
