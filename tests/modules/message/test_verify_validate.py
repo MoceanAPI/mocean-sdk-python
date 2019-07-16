@@ -67,7 +67,7 @@ class TestVerifyValidate(TestCase):
             file_content = ''.join(file_handler.read().splitlines())
             transmitter_mock = Transmitter()
             when(transmitter_mock).send(ANY, ANY, ANY).thenReturn(
-                transmitter_mock.format_response(file_content, True)
+                transmitter_mock.format_response(file_content, '/verify/check', True)
             )
 
             client = TestingUtils.get_client_obj(transmitter_mock)
