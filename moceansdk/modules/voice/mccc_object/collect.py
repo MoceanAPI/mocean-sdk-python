@@ -22,12 +22,12 @@ class Collect(AbstractMccc):
         self._params['event-url'] = event_url
         return self
 
-    def set_min(self, min):
-        self._params['min'] = min
+    def set_minimum(self, minimum):
+        self._params['min'] = minimum
         return self
 
-    def set_max(self, max):
-        self._params['max'] = max
+    def set_maximum(self, maximum):
+        self._params['max'] = maximum
         return self
 
     def set_terminators(self, terminators):

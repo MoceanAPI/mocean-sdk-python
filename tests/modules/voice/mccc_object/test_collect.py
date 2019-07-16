@@ -19,8 +19,8 @@ class TestCollect(TestCase):
 
         collect = Collect()
         collect.set_event_url('testing event url')
-        collect.set_min(1)
-        collect.set_max(10)
+        collect.set_minimum(1)
+        collect.set_maximum(10)
         collect.set_terminators('#')
         collect.set_timeout(10000)
 
