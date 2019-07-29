@@ -1,17 +1,14 @@
 from unittest import TestCase
-from mockito import when, ANY, verify, unstub
+
+import requests_mock
 
 from moceansdk import RequiredFieldException
-from moceansdk.modules.transmitter import Transmitter
 from tests.testing_utils import TestingUtils
 
 
 class TestVerifyValidate(TestCase):
-    def setUp(self):
-        self.client = TestingUtils.get_client_obj()
-
     def test_setter_method(self):
-        verify_validate = self.client.verify_validate
+        verify_validate = TestingUtils.get_client_obj().verify_validate
 
         verify_validate.set_reqid("test reqid")
         self.assertIsNotNone(verify_validate._params["mocean-reqid"])
@@ -25,61 +22,49 @@ class TestVerifyValidate(TestCase):
         self.assertIsNotNone(verify_validate._params["mocean-resp-format"])
         self.assertEqual("json", verify_validate._params["mocean-resp-format"])
 
-    def test_send(self):
-        transmitter_mock = Transmitter()
-        when(transmitter_mock).send(ANY, ANY, ANY).thenReturn('testing only')
+    @requests_mock.Mocker()
+    def test_json_send(self, m):
+        TestingUtils.intercept_mock_request(m, 'verify_code.json', '/verify/check', 'POST')
 
-        client = TestingUtils.get_client_obj(transmitter_mock)
+        client = TestingUtils.get_client_obj()
+        res = client.verify_validate.send({
+            'mocean-reqid': 'test reqid',
+            'mocean-code': 'test code'
+        })
 
-        # test is required field set
+        self.assertEqual(res.__str__(), TestingUtils.get_response_string('verify_code.json'))
+        self.__test_object(res)
+
+        self.assertTrue(m.called)
+
+    @requests_mock.Mocker()
+    def test_xml_send(self, m):
+        TestingUtils.intercept_mock_request(m, 'verify_code.xml', '/verify/check', 'POST')
+
+        client = TestingUtils.get_client_obj()
+        res = client.verify_validate.send({
+            'mocean-reqid': 'test reqid',
+            'mocean-code': 'test code',
+            'mocean-resp-format': 'xml'
+        })
+
+        self.assertEqual(res.__str__(), TestingUtils.get_response_string('verify_code.xml'))
+        self.__test_object(res)
+
+        self.assertTrue(m.called)
+
+    @requests_mock.Mocker()
+    def test_required_field_not_set(self, m):
+        TestingUtils.intercept_mock_request(m, 'verify_code.json', '/verify/check', 'POST')
+
+        client = TestingUtils.get_client_obj()
         try:
             client.verify_validate.send()
             self.fail()
         except RequiredFieldException:
             pass
 
-        self.assertEqual('testing only',
-                         client.verify_validate.set_reqid('test reqid').set_code('test code').send())
-
-        verify(transmitter_mock, times=1).send('post', '/verify/check', ANY)
-
-        unstub()
-
-    def test_json_response(self):
-        with open(TestingUtils.get_resource_file_path('verify_code.json'), 'r') as file_handler:
-            file_content = ''.join(file_handler.read().splitlines())
-            transmitter_mock = Transmitter()
-            when(transmitter_mock).send(ANY, ANY, ANY).thenReturn(transmitter_mock.format_response(file_content))
-
-            client = TestingUtils.get_client_obj(transmitter_mock)
-            res = client.verify_validate.send({
-                'mocean-reqid': 'test reqid',
-                'mocean-code': 'test code'
-            })
-
-            self.assertEqual(res.__str__(), file_content)
-            self.__test_object(res)
-
-        unstub()
-
-    def test_xml_response(self):
-        with open(TestingUtils.get_resource_file_path('verify_code.xml'), 'r') as file_handler:
-            file_content = ''.join(file_handler.read().splitlines())
-            transmitter_mock = Transmitter()
-            when(transmitter_mock).send(ANY, ANY, ANY).thenReturn(
-                transmitter_mock.format_response(file_content, '/verify/check', True)
-            )
-
-            client = TestingUtils.get_client_obj(transmitter_mock)
-            res = client.verify_validate.send({
-                'mocean-reqid': 'test reqid',
-                'mocean-code': 'test code'
-            })
-
-            self.assertEqual(res.__str__(), file_content)
-            self.__test_object(res)
-
-        unstub()
+        self.assertFalse(m.called)
 
     def __test_object(self, verify_validate_response):
         self.assertIsInstance(verify_validate_response.toDict(), dict)
