@@ -1,30 +1,10 @@
 from unittest import TestCase
-from mockito import when, ANY, verify, unstub
+
 from moceansdk import MoceanErrorException
 from moceansdk.modules.transmitter import Transmitter
 
 
 class TestTransmitter(TestCase):
-    @staticmethod
-    def test_get_method():
-        transmitter_mock = Transmitter()
-        when(transmitter_mock).send(ANY, ANY, ANY).thenReturn('testing only')
-
-        transmitter_mock.get('test uri', {})
-        verify(transmitter_mock, times=1).send('get', ANY, ANY)
-
-        unstub()
-
-    @staticmethod
-    def test_post_method():
-        transmitter_mock = Transmitter()
-        when(transmitter_mock).send(ANY, ANY, ANY).thenReturn('testing only')
-
-        transmitter_mock.post('test uri', {})
-        verify(transmitter_mock, times=1).send('post', ANY, ANY)
-
-        unstub()
-
     def test_malformed_response(self):
         try:
             Transmitter().format_response("malform string")

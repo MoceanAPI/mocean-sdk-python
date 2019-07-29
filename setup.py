@@ -8,7 +8,7 @@ with io.open(os.path.join(os.path.dirname(__file__), "README.md"), encoding='utf
 
 setuptools.setup(
     name='moceansdk',
-    version='1.0.1',
+    version='1.0.2',
     description='Mocean Client Library for Python',
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -18,7 +18,7 @@ setuptools.setup(
     license='MIT',
     install_requires=["requests>=2.20,<2.23", "xmltodict~=0.12.0", "dotmap~=1.3.0"],
     extras_require={
-        'test': ['mockito~=1.1.0'],
+        'test': ['requests-mock~=1.6.0'],
     },
     packages=setuptools.find_packages(exclude=['tests', 'tests.*']),
     platforms=['any'],

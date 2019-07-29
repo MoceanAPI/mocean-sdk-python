@@ -1,15 +1,14 @@
 from unittest import TestCase
-from mockito import when, ANY, verify, unstub
+
+import requests_mock
+
 from moceansdk.modules.transmitter import Transmitter
 from tests.testing_utils import TestingUtils
 
 
 class TestPricing(TestCase):
-    def setUp(self):
-        self.client = TestingUtils.get_client_obj()
-
     def test_setter_method(self):
-        pricing = self.client.pricing
+        pricing = TestingUtils.get_client_obj().pricing
 
         pricing.set_mcc('test mcc')
         self.assertIsNotNone(pricing._params['mocean-mcc'])
@@ -27,61 +26,37 @@ class TestPricing(TestCase):
         self.assertIsNotNone(pricing._params['mocean-resp-format'])
         self.assertEqual('json', pricing._params['mocean-resp-format'])
 
-    def test_inquiry(self):
-        transmitter_mock = Transmitter()
-        when(transmitter_mock).send(ANY, ANY, ANY).thenReturn('testing only')
+    @requests_mock.Mocker()
+    def test_json_inquiry(self, m):
+        TestingUtils.intercept_mock_request(m, 'price.json', '/account/pricing')
 
-        client = TestingUtils.get_client_obj(transmitter_mock)
-        self.assertEqual('testing only', client.pricing.inquiry())
+        client = TestingUtils.get_client_obj()
+        res = client.pricing.inquiry()
+        self.assertEqual(res.__str__(), TestingUtils.get_response_string('price.json'))
+        self.__test_object(res)
 
-        verify(transmitter_mock, times=1).send('get', '/account/pricing', ANY)
+        self.assertTrue(m.called)
 
-        unstub()
+    @requests_mock.Mocker()
+    def test_xml_inquiry(self, m):
+        TestingUtils.intercept_mock_request(m, 'price.xml', '/account/pricing', version='1')
 
-    def test_json_response(self):
-        with open(TestingUtils.get_resource_file_path('price.json'), 'r') as file_handler:
-            file_content = ''.join(file_handler.read().splitlines())
-            transmitter_mock = Transmitter()
-            when(transmitter_mock).send(ANY, ANY, ANY).thenReturn(transmitter_mock.format_response(file_content))
+        client = TestingUtils.get_client_obj(Transmitter({'version': '1'}))
+        res = client.pricing.inquiry({'mocean-resp-format': 'xml'})
 
-            client = TestingUtils.get_client_obj(transmitter_mock)
-            res = client.pricing.inquiry()
+        self.assertEqual(res.__str__(), TestingUtils.get_response_string('price.xml'))
+        self.__test_object(res)
 
-            self.assertEqual(res.__str__(), file_content)
-            self.__test_object(res)
+        # v2 test
+        TestingUtils.intercept_mock_request(m, 'price_v2.xml', '/account/pricing')
 
-        unstub()
+        client = TestingUtils.get_client_obj()
+        res = client.pricing.inquiry({'mocean-resp-format': 'xml'})
 
-    def test_xml_response(self):
-        with open(TestingUtils.get_resource_file_path('price.xml'), 'r') as file_handler:
-            file_content = ''.join(file_handler.read().splitlines())
-            transmitter_mock = Transmitter({'version': '1'})
-            when(transmitter_mock).send(ANY, ANY, ANY).thenReturn(
-                transmitter_mock.format_response(file_content, '/account/pricing', True)
-            )
+        self.assertEqual(res.__str__(), TestingUtils.get_response_string('price_v2.xml'))
+        self.__test_object(res)
 
-            client = TestingUtils.get_client_obj(transmitter_mock)
-            res = client.pricing.inquiry()
-
-            self.assertEqual(res.__str__(), file_content)
-            self.__test_object(res)
-
-        unstub()
-
-        with open(TestingUtils.get_resource_file_path('price_v2.xml'), 'r') as file_handler:
-            file_content = ''.join(file_handler.read().splitlines())
-            transmitter_mock = Transmitter({'version': '2'})
-            when(transmitter_mock).send(ANY, ANY, ANY).thenReturn(
-                transmitter_mock.format_response(file_content, '/account/pricing', True)
-            )
-
-            client = TestingUtils.get_client_obj(transmitter_mock)
-            res = client.pricing.inquiry()
-
-            self.assertEqual(res.__str__(), file_content)
-            self.__test_object(res)
-
-        unstub()
+        self.assertEqual(m.call_count, 2)
 
     def __test_object(self, pricing_response):
         self.assertIsInstance(pricing_response.toDict(), dict)

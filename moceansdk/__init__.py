@@ -11,7 +11,7 @@ name = "moceansdk"
 
 
 class Client(object):
-    SDK_VERSION = '1.0.1'
+    SDK_VERSION = '1.0.2'
 
     def __init__(self, obj_auth, options=None):
         if not isinstance(obj_auth, AbstractAuth):

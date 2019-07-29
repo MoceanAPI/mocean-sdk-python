@@ -1,5 +1,6 @@
 from unittest import TestCase
-from mockito import when, ANY, verify, unstub, arg_that
+
+import requests_mock
 
 from moceansdk import RequiredFieldException
 from moceansdk.modules.transmitter import Transmitter
@@ -7,11 +8,8 @@ from tests.testing_utils import TestingUtils
 
 
 class TestSms(TestCase):
-    def setUp(self):
-        self.client = TestingUtils.get_client_obj()
-
     def test_setter_method(self):
-        sms = self.client.sms
+        sms = TestingUtils.get_client_obj().sms
 
         sms.set_from("test from")
         self.assertIsNotNone(sms._params["mocean-from"])
@@ -72,100 +70,82 @@ class TestSms(TestCase):
         self.assertIsNotNone(sms._params["mocean-resp-format"])
         self.assertEqual("json", sms._params["mocean-resp-format"])
 
-    def test_send(self):
-        transmitter_mock = Transmitter()
-        when(transmitter_mock).send(ANY, ANY, ANY).thenReturn('testing only')
+    @requests_mock.Mocker()
+    def test_send_flash_sms(self, m):
+        TestingUtils.intercept_mock_request(m, 'message.json', '/sms', 'POST')
 
-        client = TestingUtils.get_client_obj(transmitter_mock)
+        client = TestingUtils.get_client_obj()
+        client.flash_sms.send({
+            'mocean-from': 'test from',
+            'mocean-to': 'test to',
+            'mocean-text': 'test text'
+        })
 
-        # test is required field set
+        self.assertTrue(m.called)
+
+        parameters = TestingUtils.convert_qs_to_dict(m.last_request.body)
+        self.assertTrue('mocean-mclass' in parameters)
+        self.assertTrue('mocean-alt-dcs' in parameters)
+
+    @requests_mock.Mocker()
+    def test_json_send(self, m):
+        TestingUtils.intercept_mock_request(m, 'message.json', '/sms', 'POST')
+
+        client = TestingUtils.get_client_obj()
+        res = client.sms.send({
+            'mocean-from': 'test from',
+            'mocean-to': 'test to',
+            'mocean-text': 'test text'
+        })
+
+        self.assertEqual(res.__str__(), TestingUtils.get_response_string('message.json'))
+        self.__test_object(res)
+
+        self.assertTrue(m.called)
+
+    @requests_mock.Mocker()
+    def test_xml_send(self, m):
+        TestingUtils.intercept_mock_request(m, 'message.xml', '/sms', 'POST', '1')
+
+        client = TestingUtils.get_client_obj(Transmitter({'version': '1'}))
+        res = client.sms.send({
+            'mocean-from': 'test from',
+            'mocean-to': 'test to',
+            'mocean-text': 'test text',
+            'mocean-resp-format': 'xml'
+        })
+
+        self.assertEqual(res.__str__(), TestingUtils.get_response_string('message.xml'))
+        self.__test_object(res)
+
+        # v2 test
+        TestingUtils.intercept_mock_request(m, 'message_v2.xml', '/sms', 'POST')
+
+        client = TestingUtils.get_client_obj()
+        res = client.sms.send({
+            'mocean-from': 'test from',
+            'mocean-to': 'test to',
+            'mocean-text': 'test text',
+            'mocean-resp-format': 'xml'
+        })
+
+        self.assertEqual(res.__str__(), TestingUtils.get_response_string('message_v2.xml'))
+        self.__test_object(res)
+
+        self.assertEqual(m.call_count, 2)
+
+    @requests_mock.Mocker()
+    def test_required_field_not_set(self, m):
+        TestingUtils.intercept_mock_request(m, 'message.json', '/sms', 'POST')
+
+        client = TestingUtils.get_client_obj()
         try:
             client.sms.send()
             self.fail()
         except RequiredFieldException:
             pass
 
-        self.assertEqual('testing only',
-                         client.sms.set_from('test from').set_to('test to').set_text('test text').send())
-
-        verify(transmitter_mock, times=1).send('post', '/sms', ANY)
-
-        unstub()
-
-    def test_send_flash_sms(self):
-        transmitter_mock = Transmitter()
-        when(transmitter_mock).send(ANY, ANY, ANY).thenReturn('testing only')
-
-        client = TestingUtils.get_client_obj(transmitter_mock)
-        self.assertEqual('testing only',
-                         client.flash_sms.send({
-                             'mocean-from': 'test from',
-                             'mocean-to': 'test to',
-                             'mocean-text': 'test text'
-                         }))
-
-        verify(transmitter_mock, times=1).send('post', '/sms', arg_that(lambda arg: (
-                'mocean-mclass' in arg and 'mocean-alt-dcs' in arg
-        )))
-
-        unstub()
-
-    def test_json_response(self):
-        with open(TestingUtils.get_resource_file_path('message.json'), 'r') as file_handler:
-            file_content = ''.join(file_handler.read().splitlines())
-            transmitter_mock = Transmitter()
-            when(transmitter_mock).send(ANY, ANY, ANY).thenReturn(transmitter_mock.format_response(file_content))
-
-            client = TestingUtils.get_client_obj(transmitter_mock)
-            res = client.sms.send({
-                'mocean-from': 'test from',
-                'mocean-to': 'test to',
-                'mocean-text': 'test text'
-            })
-
-            self.assertEqual(res.__str__(), file_content)
-            self.__test_object(res)
-
-        unstub()
-
-    def test_xml_response(self):
-        with open(TestingUtils.get_resource_file_path('message.xml'), 'r') as file_handler:
-            file_content = ''.join(file_handler.read().splitlines())
-            transmitter_mock = Transmitter({'version': '1'})
-            when(transmitter_mock).send(ANY, ANY, ANY).thenReturn(
-                transmitter_mock.format_response(file_content, '/sms', True)
-            )
-
-            client = TestingUtils.get_client_obj(transmitter_mock)
-            res = client.sms.send({
-                'mocean-from': 'test from',
-                'mocean-to': 'test to',
-                'mocean-text': 'test text'
-            })
-
-            self.assertEqual(res.__str__(), file_content)
-            self.__test_object(res)
-
-        unstub()
-
-        with open(TestingUtils.get_resource_file_path('message_v2.xml'), 'r') as file_handler:
-            file_content = ''.join(file_handler.read().splitlines())
-            transmitter_mock = Transmitter({'version': '2'})
-            when(transmitter_mock).send(ANY, ANY, ANY).thenReturn(
-                transmitter_mock.format_response(file_content, '/sms', True)
-            )
-
-            client = TestingUtils.get_client_obj(transmitter_mock)
-            res = client.sms.send({
-                'mocean-from': 'test from',
-                'mocean-to': 'test to',
-                'mocean-text': 'test text'
-            })
-
-            self.assertEqual(res.__str__(), file_content)
-            self.__test_object(res)
-
-        unstub()
+        self.assertFalse(m.called)
 
     def __test_object(self, sms_response):
         self.assertIsInstance(sms_response.toDict(), dict)
