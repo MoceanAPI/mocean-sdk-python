@@ -1,7 +1,13 @@
 import os
+import sys
 
 from moceansdk import Client, Basic
 from moceansdk.modules import Transmitter
+
+if (3, 0) <= sys.version_info <= (3, 9):
+    from urllib import parse as url_parser
+elif (2, 0) <= sys.version_info <= (2, 9):
+    from urlparse import urlparse as url_parser
 
 
 class TestingUtils(object):
@@ -25,3 +31,7 @@ class TestingUtils(object):
     def intercept_mock_request(m, file_name, uri, method='GET', version='2'):
         m.request(method, Transmitter.default_options()['base_url'] + "/rest/" + version + uri,
                   text=TestingUtils.get_response_string(file_name))
+
+    @staticmethod
+    def convert_qs_to_dict(qs):
+        return url_parser.parse_qs(qs)

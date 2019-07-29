@@ -1,5 +1,4 @@
 from unittest import TestCase
-from urllib import parse as url_parser
 
 import requests_mock
 
@@ -84,7 +83,7 @@ class TestSms(TestCase):
 
         self.assertTrue(m.called)
 
-        parameters = url_parser.parse_qs(m.last_request.text)
+        parameters = TestingUtils.convert_qs_to_dict(m.last_request.body)
         self.assertTrue('mocean-mclass' in parameters)
         self.assertTrue('mocean-alt-dcs' in parameters)
 
