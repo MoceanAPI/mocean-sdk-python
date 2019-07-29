@@ -52,7 +52,8 @@ class TestVoice(TestCase):
 
         client = TestingUtils.get_client_obj()
         res = client.voice.call({
-            'mocean-to': 'test to'
+            'mocean-to': 'test to',
+            'mocean-call-control-commands': 'test mocean call control commands'
         })
 
         self.assertEqual(res.__str__(), TestingUtils.get_response_string('voice.json'))
