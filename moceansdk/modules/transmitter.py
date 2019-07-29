@@ -68,9 +68,9 @@ class Transmitter(object):
             raise MoceanErrorException(processed_response['err_msg'], processed_response.set_raw_response(raw_response))
 
         # post process response
-        if uri == '/account/pricing':
+        if uri == '/account/pricing' and is_xml:
             processed_response.destinations = processed_response.destinations.destination
-        elif uri == '/sms':
+        elif uri == '/sms' and is_xml:
             if not isinstance(processed_response.messages.message, list):
                 processed_response.messages.message = [processed_response.messages.message]
             processed_response.messages = processed_response.messages.message
