@@ -1,17 +1,14 @@
 from unittest import TestCase
-from mockito import when, ANY, verify, unstub
+
+import requests_mock
 
 from moceansdk import RequiredFieldException
-from moceansdk.modules.transmitter import Transmitter
 from tests.testing_utils import TestingUtils
 
 
 class TestNumberLookup(TestCase):
-    def setUp(self):
-        self.client = TestingUtils.get_client_obj()
-
     def test_setter_method(self):
-        number_lookup = self.client.number_lookup
+        number_lookup = TestingUtils.get_client_obj().number_lookup
 
         number_lookup.set_to('test to')
         self.assertIsNotNone(number_lookup._params['mocean-to'])
@@ -25,58 +22,47 @@ class TestNumberLookup(TestCase):
         self.assertIsNotNone(number_lookup._params['mocean-resp-format'])
         self.assertEqual('json', number_lookup._params['mocean-resp-format'])
 
-    def test_inquiry(self):
-        transmitter_mock = Transmitter()
-        when(transmitter_mock).send(ANY, ANY, ANY).thenReturn('testing only')
+    @requests_mock.Mocker()
+    def test_json_inquiry(self, m):
+        TestingUtils.intercept_mock_request(m, 'number_lookup.json', '/nl', 'POST')
 
-        client = TestingUtils.get_client_obj(transmitter_mock)
+        client = TestingUtils.get_client_obj()
+        res = client.number_lookup.inquiry({
+            'mocean-to': 'test to'
+        })
 
-        # test is required field set
+        self.assertEqual(res.__str__(), TestingUtils.get_response_string('number_lookup.json'))
+        self.__test_object(res)
+
+        self.assertTrue(m.called)
+
+    @requests_mock.Mocker()
+    def test_xml_inquiry(self, m):
+        TestingUtils.intercept_mock_request(m, 'number_lookup.xml', '/nl', 'POST')
+
+        client = TestingUtils.get_client_obj()
+        res = client.number_lookup.inquiry({
+            'mocean-to': 'test to',
+            'mocean-resp-format': 'xml'
+        })
+
+        self.assertEqual(res.__str__(), TestingUtils.get_response_string('number_lookup.xml'))
+        self.__test_object(res)
+
+        self.assertTrue(m.called)
+
+    @requests_mock.Mocker()
+    def test_required_field_not_set(self, m):
+        TestingUtils.intercept_mock_request(m, 'number_lookup.json', '/nl', 'POST')
+
+        client = TestingUtils.get_client_obj()
         try:
             client.number_lookup.inquiry()
             self.fail()
         except RequiredFieldException:
             pass
 
-        self.assertEqual('testing only', client.number_lookup.set_to('test to').inquiry())
-
-        verify(transmitter_mock, times=1).send('post', '/nl', ANY)
-
-        unstub()
-
-    def test_json_response(self):
-        with open(TestingUtils.get_resource_file_path('number_lookup.json'), 'r') as file_handler:
-            file_content = ''.join(file_handler.read().splitlines())
-            transmitter_mock = Transmitter()
-            when(transmitter_mock).send(ANY, ANY, ANY).thenReturn(transmitter_mock.format_response(file_content))
-
-            client = TestingUtils.get_client_obj(transmitter_mock)
-            res = client.number_lookup.inquiry({
-                'mocean-to': 'test to'
-            })
-
-            self.assertEqual(res.__str__(), file_content)
-            self.__test_object(res)
-
-        unstub()
-
-    def test_xml_response(self):
-        with open(TestingUtils.get_resource_file_path('number_lookup.xml'), 'r') as file_handler:
-            file_content = ''.join(file_handler.read().splitlines())
-            transmitter_mock = Transmitter()
-            when(transmitter_mock).send(ANY, ANY, ANY).thenReturn(
-                transmitter_mock.format_response(file_content, '/nl', True)
-            )
-
-            client = TestingUtils.get_client_obj(transmitter_mock)
-            res = client.number_lookup.inquiry({
-                'mocean-to': 'test to'
-            })
-
-            self.assertEqual(res.__str__(), file_content)
-            self.__test_object(res)
-
-        unstub()
+        self.assertFalse(m.called)
 
     def __test_object(self, number_lookup_response):
         self.assertIsInstance(number_lookup_response.toDict(), dict)

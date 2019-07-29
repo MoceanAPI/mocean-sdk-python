@@ -1,18 +1,15 @@
 from unittest import TestCase
-from mockito import when, ANY, verify, unstub
+
+import requests_mock
 
 from moceansdk import RequiredFieldException
 from moceansdk.modules.message.channel import Channel
-from moceansdk.modules.transmitter import Transmitter
 from tests.testing_utils import TestingUtils
 
 
 class TestVerifyRequest(TestCase):
-    def setUp(self):
-        self.client = TestingUtils.get_client_obj()
-
     def test_setter_method(self):
-        verify_request = self.client.verify_request
+        verify_request = TestingUtils.get_client_obj().verify_request
 
         verify_request.set_to("test to")
         self.assertIsNotNone(verify_request._params["mocean-to"])
@@ -46,31 +43,11 @@ class TestVerifyRequest(TestCase):
         self.assertIsNotNone(verify_request._params["mocean-resp-format"])
         self.assertEqual("json", verify_request._params["mocean-resp-format"])
 
-    def test_send(self):
-        transmitter_mock = Transmitter()
-        when(transmitter_mock).send(ANY, ANY, ANY).thenReturn('testing only')
+    @requests_mock.Mocker()
+    def test_send_as_sms_channel(self, m):
+        TestingUtils.intercept_mock_request(m, 'send_code.json', '/verify/req/sms', 'POST')
 
-        client = TestingUtils.get_client_obj(transmitter_mock)
-
-        # test is required field set
-        try:
-            client.verify_request.send()
-            self.fail()
-        except RequiredFieldException:
-            pass
-
-        self.assertEqual('testing only',
-                         client.verify_request.set_to('test to').set_brand('test brand').send())
-
-        verify(transmitter_mock, times=1).send('post', '/verify/req', ANY)
-
-        unstub()
-
-    def test_send_as_sms_channel(self):
-        transmitter_mock = Transmitter()
-        when(transmitter_mock).send(ANY, ANY, ANY).thenReturn('testing only')
-
-        client = TestingUtils.get_client_obj(transmitter_mock)
+        client = TestingUtils.get_client_obj()
         verify_request = client.verify_request
         self.assertEqual(verify_request._channel, Channel.AUTO)
         verify_request.send_as(Channel.SMS)
@@ -80,59 +57,62 @@ class TestVerifyRequest(TestCase):
             'mocean-brand': 'testing brand'
         })
 
-        verify(transmitter_mock, times=1).send('post', '/verify/req/sms', ANY)
+        self.assertTrue(m.called)
 
-        unstub()
+    @requests_mock.Mocker()
+    def test_resend(self, m):
+        TestingUtils.intercept_mock_request(m, 'send_code.json', '/verify/resend/sms', 'POST')
 
-    @staticmethod
-    def test_resend():
-        transmitter_mock = Transmitter()
-        when(transmitter_mock).send(ANY, ANY, ANY).thenReturn('testing only')
-
-        client = TestingUtils.get_client_obj(transmitter_mock)
+        client = TestingUtils.get_client_obj()
         client.verify_request.resend({
             'mocean-reqid': 'testing req id'
         })
 
-        verify(transmitter_mock, times=1).send('post', '/verify/resend/sms', ANY)
+        self.assertTrue(m.called)
 
-        unstub()
+    @requests_mock.Mocker()
+    def test_json_send(self, m):
+        TestingUtils.intercept_mock_request(m, 'send_code.json', '/verify/req', 'POST')
 
-    def test_json_response(self):
-        with open(TestingUtils.get_resource_file_path('send_code.json'), 'r') as file_handler:
-            file_content = ''.join(file_handler.read().splitlines())
-            transmitter_mock = Transmitter()
-            when(transmitter_mock).send(ANY, ANY, ANY).thenReturn(transmitter_mock.format_response(file_content))
+        client = TestingUtils.get_client_obj()
+        res = client.verify_request.send({
+            'mocean-to': 'test to',
+            'mocean-brand': 'test brand'
+        })
 
-            client = TestingUtils.get_client_obj(transmitter_mock)
-            res = client.verify_request.send({
-                'mocean-to': 'test to',
-                'mocean-brand': 'test brand'
-            })
+        self.assertEqual(res.__str__(), TestingUtils.get_response_string('send_code.json'))
+        self.__test_object(res)
 
-            self.assertEqual(res.__str__(), file_content)
-            self.__test_object(res)
+        self.assertTrue(m.called)
 
-        unstub()
+    @requests_mock.Mocker()
+    def test_xml_response(self, m):
+        TestingUtils.intercept_mock_request(m, 'send_code.xml', '/verify/req', 'POST')
 
-    def test_xml_response(self):
-        with open(TestingUtils.get_resource_file_path('send_code.xml'), 'r') as file_handler:
-            file_content = ''.join(file_handler.read().splitlines())
-            transmitter_mock = Transmitter()
-            when(transmitter_mock).send(ANY, ANY, ANY).thenReturn(
-                transmitter_mock.format_response(file_content, '/verify/req', True)
-            )
+        client = TestingUtils.get_client_obj()
+        res = client.verify_request.send({
+            'mocean-to': 'test to',
+            'mocean-brand': 'test brand',
+            'mocean-resp-format': 'xml'
+        })
 
-            client = TestingUtils.get_client_obj(transmitter_mock)
-            res = client.verify_request.send({
-                'mocean-to': 'test to',
-                'mocean-brand': 'test brand'
-            })
+        self.assertEqual(res.__str__(), TestingUtils.get_response_string('send_code.xml'))
+        self.__test_object(res)
 
-            self.assertEqual(res.__str__(), file_content)
-            self.__test_object(res)
+        self.assertTrue(m.called)
 
-        unstub()
+    @requests_mock.Mocker()
+    def test_required_field_not_set(self, m):
+        TestingUtils.intercept_mock_request(m, 'send_code.json', '/verify/req', 'POST')
+
+        client = TestingUtils.get_client_obj()
+        try:
+            client.verify_request.send()
+            self.fail()
+        except RequiredFieldException:
+            pass
+
+        self.assertFalse(m.called)
 
     def __test_object(self, verify_request_response):
         self.assertIsInstance(verify_request_response.toDict(), dict)

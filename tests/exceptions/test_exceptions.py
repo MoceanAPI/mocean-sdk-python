@@ -1,4 +1,5 @@
 from unittest import TestCase
+
 from moceansdk import Transmitter, MoceanErrorException
 from moceansdk.modules.response_factory import DotMapExtended
 from tests.testing_utils import TestingUtils
