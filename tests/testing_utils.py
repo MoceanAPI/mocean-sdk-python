@@ -4,10 +4,10 @@ import sys
 from moceansdk import Client, Basic
 from moceansdk.modules import Transmitter
 
-if (3, 0) <= sys.version_info <= (3, 9):
+if (3, 0) <= sys.version_info < (4, 0):
     from urllib import parse as url_parser
-elif (2, 0) <= sys.version_info <= (2, 9):
-    from urlparse import urlparse as url_parser
+elif (2, 0) <= sys.version_info < (3, 0):
+    from urlparse import parse_qs as url_parser
 
 
 class TestingUtils(object):
@@ -34,4 +34,7 @@ class TestingUtils(object):
 
     @staticmethod
     def convert_qs_to_dict(qs):
+        if (2, 0) <= sys.version_info < (3, 0):
+            return url_parser(qs)
+
         return url_parser.parse_qs(qs)
