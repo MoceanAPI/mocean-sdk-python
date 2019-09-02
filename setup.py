@@ -18,7 +18,7 @@ setuptools.setup(
     license='MIT',
     install_requires=["requests>=2.20,<2.23", "xmltodict~=0.12.0", "dotmap~=1.3.0"],
     extras_require={
-        'test': ['requests-mock~=1.6.0'],
+        'test': ['requests-mock>=1.6,<1.8'],
     },
     packages=setuptools.find_packages(exclude=['tests', 'tests.*']),
     platforms=['any'],
