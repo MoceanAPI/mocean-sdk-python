@@ -8,14 +8,12 @@ class TestSleep(TestCase):
     def testParams(self):
         params = {
             'duration': 10000,
-            'barge-in': True,
             'action': 'sleep'
         }
         self.assertEqual(params, Sleep(params).get_request_data())
 
         sleep = Sleep()
         sleep.set_duration(10000)
-        sleep.set_barge_in(True)
 
         self.assertEqual(params, sleep.get_request_data())
 

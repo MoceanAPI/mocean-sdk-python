@@ -1,8 +1,9 @@
-from moceansdk.modules.voice.mccc_object.bridge import Bridge
+from moceansdk.modules.voice.mccc_object.dial import Dial
 from moceansdk.modules.voice.mccc_object.collect import Collect
 from moceansdk.modules.voice.mccc_object.play import Play
 from moceansdk.modules.voice.mccc_object.say import Say
 from moceansdk.modules.voice.mccc_object.sleep import Sleep
+from moceansdk.modules.voice.mccc_object.record import Record
 
 
 class Mccc():
@@ -25,8 +26,8 @@ class Mccc():
         return ins
 
     @staticmethod
-    def bridge(to=None):
-        ins = Bridge()
+    def dial(to=None):
+        ins = Dial()
 
         if to is not None:
             ins.set_to(to)
@@ -50,3 +51,7 @@ class Mccc():
             ins.set_duration(duration)
 
         return ins
+
+    @staticmethod
+    def record():
+        return Record()

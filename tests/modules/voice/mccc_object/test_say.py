@@ -10,6 +10,7 @@ class TestSay(TestCase):
             'language': 'testing language',
             'text': 'testing text',
             'barge-in': True,
+            'clear-digit-cache': True,
             'action': 'say'
         }
         self.assertEqual(params, Say(params).get_request_data())
@@ -18,6 +19,7 @@ class TestSay(TestCase):
         say.set_language('testing language')
         say.set_text('testing text')
         say.set_barge_in(True)
+        say.set_clear_digit_cache(True)
 
         self.assertEqual(params, say.get_request_data())
 

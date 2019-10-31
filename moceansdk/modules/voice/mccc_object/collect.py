@@ -2,22 +2,6 @@ from moceansdk.modules.voice.mccc_object import AbstractMccc
 
 
 class Collect(AbstractMccc):
-    def __init__(self, params=None):
-        super(Collect, self).__init__(params)
-
-        # default value
-        if 'min' not in self._params:
-            self._params['min'] = 1
-
-        if 'max' not in self._params:
-            self._params['max'] = 10
-
-        if 'terminators' not in self._params:
-            self._params['terminators'] = '#'
-
-        if 'timeout' not in self._params:
-            self._params['timeout'] = 5000
-
     def set_event_url(self, event_url):
         self._params['event-url'] = event_url
         return self
@@ -39,7 +23,7 @@ class Collect(AbstractMccc):
         return self
 
     def required_key(self):
-        return ['event-url', 'min', 'max', 'terminators', 'timeout']
+        return ['event-url', 'min', 'max', 'timeout']
 
     def action(self):
         return 'collect'

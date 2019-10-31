@@ -48,7 +48,7 @@ class TestVoice(TestCase):
 
     @requests_mock.Mocker()
     def test_json_call(self, m):
-        TestingUtils.intercept_mock_request(m, 'voice.json', '/voice/dial')
+        TestingUtils.intercept_mock_request(m, 'voice.json', '/voice/dial', 'POST')
 
         client = TestingUtils.get_client_obj()
         res = client.voice.call({
@@ -63,7 +63,7 @@ class TestVoice(TestCase):
 
     @requests_mock.Mocker()
     def test_xml_call(self, m):
-        TestingUtils.intercept_mock_request(m, 'voice.xml', '/voice/dial')
+        TestingUtils.intercept_mock_request(m, 'voice.xml', '/voice/dial', 'POST')
 
         client = TestingUtils.get_client_obj()
         res = client.voice.call({
@@ -78,7 +78,7 @@ class TestVoice(TestCase):
 
     @requests_mock.Mocker()
     def test_required_field_not_set(self, m):
-        TestingUtils.intercept_mock_request(m, 'voice.json', '/voice/dial')
+        TestingUtils.intercept_mock_request(m, 'voice.json', '/voice/dial', 'POST')
 
         client = TestingUtils.get_client_obj()
         try:

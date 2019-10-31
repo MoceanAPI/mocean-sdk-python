@@ -47,5 +47,5 @@ class Voice(AbstractClient):
         self.create_final_params()
         self.is_required_field_set()
 
-        response = self._transmitter.get('/voice/dial', self._params)
+        response = self._transmitter.post('/voice/dial', self._params)
         return response

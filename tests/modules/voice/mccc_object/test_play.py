@@ -9,6 +9,7 @@ class TestPlay(TestCase):
         params = {
             'file': 'testing file',
             'barge-in': True,
+            'clear-digit-cache': True,
             'action': 'play'
         }
         self.assertEqual(params, Play(params).get_request_data())
@@ -16,6 +17,7 @@ class TestPlay(TestCase):
         play = Play()
         play.set_files('testing file')
         play.set_barge_in(True)
+        play.set_clear_digit_cache(True)
 
         self.assertEqual(params, play.get_request_data())
 
