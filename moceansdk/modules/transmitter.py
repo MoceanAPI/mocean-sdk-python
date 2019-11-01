@@ -55,6 +55,10 @@ class Transmitter(object):
                 response_text = response_text \
                     .replace("<result>", "<result><messages>") \
                     .replace("</result>", "</messages></result>")
+            elif uri == '/voice/dial':
+                response_text = response_text \
+                    .replace("<result>", "<result><calls>") \
+                    .replace("</result", "</calls></result>")
 
         processed_response = ResponseFactory.create_object_from_raw_response(
             response_text
@@ -74,5 +78,9 @@ class Transmitter(object):
             if not isinstance(processed_response.messages.message, list):
                 processed_response.messages.message = [processed_response.messages.message]
             processed_response.messages = processed_response.messages.message
+        elif uri == '/voice/dial' and is_xml:
+            if not isinstance(processed_response.calls.call, list):
+                processed_response.calls.call = [processed_response.calls.call]
+            processed_response.calls = processed_response.calls.call
 
         return processed_response.set_raw_response(raw_response)

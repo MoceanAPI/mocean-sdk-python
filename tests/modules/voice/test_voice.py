@@ -91,6 +91,7 @@ class TestVoice(TestCase):
 
     def __test_object(self, voice_response):
         self.assertIsInstance(voice_response.toDict(), dict)
-        self.assertEqual(voice_response.status, '0')
-        self.assertEqual(voice_response['session-uuid'], 'xxx-xxx-xxx-xxx')
-        self.assertEqual(voice_response['call-uuid'], 'xxx-xxx-xxx-xxx')
+        self.assertEqual(voice_response.calls[0].status, '0')
+        self.assertEqual(voice_response.calls[0].receiver, '60123456789')
+        self.assertEqual(voice_response.calls[0]['session-uuid'], 'xxx-xxx-xxx-xxx')
+        self.assertEqual(voice_response.calls[0]['call-uuid'], 'xxx-xxx-xxx-xxx')
