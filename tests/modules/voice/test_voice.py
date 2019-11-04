@@ -77,6 +77,30 @@ class TestVoice(TestCase):
         self.assertTrue(m.called)
 
     @requests_mock.Mocker()
+    def test_json_hangup(self, m):
+        TestingUtils.intercept_mock_request(m, 'hangup.json', '/voice/hangup/xxx-xxx-xxx-xxx', 'POST')
+
+        client = TestingUtils.get_client_obj()
+        res = client.voice.hangup('xxx-xxx-xxx-xxx')
+
+        self.assertEqual(res.__str__(), TestingUtils.get_response_string('hangup.json'))
+        self.assertEqual(res.status, '0')
+
+        self.assertTrue(m.called)
+
+    @requests_mock.Mocker()
+    def test_xml_hangup(self, m):
+        TestingUtils.intercept_mock_request(m, 'hangup.xml', '/voice/hangup/xxx-xxx-xxx-xxx', 'POST')
+
+        client = TestingUtils.get_client_obj()
+        res = client.voice.hangup('xxx-xxx-xxx-xxx')
+
+        self.assertEqual(res.__str__(), TestingUtils.get_response_string('hangup.xml'))
+        self.assertEqual(res.status, '0')
+
+        self.assertTrue(m.called)
+
+    @requests_mock.Mocker()
     def test_required_field_not_set(self, m):
         TestingUtils.intercept_mock_request(m, 'voice.json', '/voice/dial', 'POST')
 

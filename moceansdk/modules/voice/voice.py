@@ -49,3 +49,13 @@ class Voice(AbstractClient):
 
         response = self._transmitter.post('/voice/dial', self._params)
         return response
+
+    def hangup(self, call_uuid):
+        self._required_fields = ['mocean-api-key', 'mocean-api-secret']
+
+        super(Voice, self).create({})
+        self.create_final_params()
+        self.is_required_field_set()
+
+        response = self._transmitter.post('/voice/hangup/%s' % call_uuid, self._params)
+        return response
