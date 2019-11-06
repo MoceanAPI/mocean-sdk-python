@@ -55,10 +55,6 @@ class Transmitter(object):
                 response_text = response_text \
                     .replace("<result>", "<result><messages>") \
                     .replace("</result>", "</messages></result>")
-            elif uri == '/voice/dial':
-                response_text = response_text \
-                    .replace("<result>", "<result><calls>") \
-                    .replace("</result", "</calls></result>")
 
         processed_response = ResponseFactory.create_object_from_raw_response(
             response_text
