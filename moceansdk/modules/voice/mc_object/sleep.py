@@ -1,7 +1,7 @@
-from moceansdk.modules.voice.mccc_object import AbstractMccc
+from moceansdk.modules.voice.mc_object import AbstractMc
 
 
-class Sleep(AbstractMccc):
+class Sleep(AbstractMc):
     def set_duration(self, duration):
         self._params['duration'] = duration
         return self

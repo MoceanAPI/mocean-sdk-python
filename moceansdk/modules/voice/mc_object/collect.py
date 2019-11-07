@@ -1,7 +1,7 @@
-from moceansdk.modules.voice.mccc_object import AbstractMccc
+from moceansdk.modules.voice.mc_object import AbstractMc
 
 
-class Collect(AbstractMccc):
+class Collect(AbstractMc):
     def set_event_url(self, event_url):
         self._params['event-url'] = event_url
         return self

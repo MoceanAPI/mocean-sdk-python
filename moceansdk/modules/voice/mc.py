@@ -1,12 +1,12 @@
-from moceansdk.modules.voice.mccc_object.dial import Dial
-from moceansdk.modules.voice.mccc_object.collect import Collect
-from moceansdk.modules.voice.mccc_object.play import Play
-from moceansdk.modules.voice.mccc_object.say import Say
-from moceansdk.modules.voice.mccc_object.sleep import Sleep
-from moceansdk.modules.voice.mccc_object.record import Record
+from moceansdk.modules.voice.mc_object.dial import Dial
+from moceansdk.modules.voice.mc_object.collect import Collect
+from moceansdk.modules.voice.mc_object.play import Play
+from moceansdk.modules.voice.mc_object.say import Say
+from moceansdk.modules.voice.mc_object.sleep import Sleep
+from moceansdk.modules.voice.mc_object.record import Record
 
 
-class Mccc():
+class Mc():
     @staticmethod
     def say(text=None):
         ins = Say()

@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from moceansdk import RequiredFieldException
-from moceansdk.modules.voice.mccc_object.dial import Dial
+from moceansdk.modules.voice.mc_object.dial import Dial
 
 
 class TestDial(TestCase):

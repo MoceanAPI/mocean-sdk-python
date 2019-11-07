@@ -1,13 +1,13 @@
 from unittest import TestCase
 
-from moceansdk import McccBuilder, Mccc, MoceanErrorException
+from moceansdk import McBuilder, Mc, MoceanErrorException
 
 
-class TestMcccBuilder(TestCase):
+class TestMcBuilder(TestCase):
     def test_add(self):
-        play = Mccc.play('testing file')
+        play = Mc.play('testing file')
 
-        builder = McccBuilder()
+        builder = McBuilder()
         builder.add(play)
         self.assertEqual(1, len(builder.build()))
         self.assertEqual(play.get_request_data(), builder.build()[0])
@@ -17,9 +17,9 @@ class TestMcccBuilder(TestCase):
         self.assertEqual(2, len(builder.build()))
         self.assertEqual(play.get_request_data(), builder.build()[1])
 
-    def test_throw_exception_for_add_method_pass_in_non_mccc_object(self):
+    def test_throw_exception_for_add_method_pass_in_non_mc_object(self):
         try:
-            McccBuilder().add('abc')
+            McBuilder().add('abc')
             self.fail()
         except MoceanErrorException:
             pass

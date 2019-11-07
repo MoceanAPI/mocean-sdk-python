@@ -4,8 +4,8 @@ from moceansdk.auth import AbstractAuth
 from moceansdk.auth.basic import Basic
 from moceansdk.exceptions import MoceanErrorException, RequiredFieldException
 from moceansdk.modules import Transmitter
-from moceansdk.modules.voice.mccc_builder import McccBuilder
-from moceansdk.modules.voice.mccc import Mccc
+from moceansdk.modules.voice.mc_builder import McBuilder
+from moceansdk.modules.voice.mc import Mc
 
 name = "moceansdk"
 

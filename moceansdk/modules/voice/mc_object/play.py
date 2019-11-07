@@ -1,7 +1,7 @@
-from moceansdk.modules.voice.mccc_object import AbstractMccc
+from moceansdk.modules.voice.mc_object import AbstractMc
 
 
-class Play(AbstractMccc):
+class Play(AbstractMc):
     def set_files(self, files):
         self._params['file'] = files
         return self

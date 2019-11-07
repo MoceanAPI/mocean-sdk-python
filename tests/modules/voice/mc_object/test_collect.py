@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from moceansdk import RequiredFieldException
-from moceansdk.modules.voice.mccc_object.collect import Collect
+from moceansdk.modules.voice.mc_object.collect import Collect
 
 
 class TestCollect(TestCase):

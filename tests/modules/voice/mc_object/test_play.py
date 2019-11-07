@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from moceansdk import RequiredFieldException
-from moceansdk.modules.voice.mccc_object.play import Play
+from moceansdk.modules.voice.mc_object.play import Play
 
 
 class TestPlay(TestCase):

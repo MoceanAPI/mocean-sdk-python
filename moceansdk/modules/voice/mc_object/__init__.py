@@ -1,7 +1,7 @@
 from moceansdk import RequiredFieldException
 
 
-class AbstractMccc(object):
+class AbstractMc(object):
     def __init__(self, params=None):
         self._params = {}
 
@@ -17,7 +17,7 @@ class AbstractMccc(object):
         return self._params
 
     def required_key(self):
-        raise NotImplementedError("AbstractMccc is a abstract class")
+        raise NotImplementedError("AbstractMc is a abstract class")
 
     def action(self):
-        raise NotImplementedError("AbstractMccc is a abstract class")
+        raise NotImplementedError("AbstractMc is a abstract class")

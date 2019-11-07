@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from moceansdk.modules.voice.mccc_object.record import Record
+from moceansdk.modules.voice.mc_object.record import Record
 
 
 class TestRecord(TestCase):

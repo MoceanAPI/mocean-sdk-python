@@ -1,7 +1,7 @@
 import json
 from moceansdk.modules import AbstractClient
-from moceansdk.modules.voice.mccc_object import AbstractMccc
-from moceansdk.modules.voice.mccc_builder import McccBuilder
+from moceansdk.modules.voice.mc_object import AbstractMc
+from moceansdk.modules.voice.mc_builder import McBuilder
 
 
 class Voice(AbstractClient):
@@ -14,19 +14,19 @@ class Voice(AbstractClient):
         self._params['mocean-to'] = to
         return self
 
-    def set_call_event_url(self, call_event_url):
-        self._params['mocean-call-event-url'] = call_event_url
+    def set_event_url(self, event_url):
+        self._params['mocean-event-url'] = event_url
         return self
 
-    def set_call_control_commands(self, call_control_commands):
-        if isinstance(call_control_commands, McccBuilder):
-            self._params['mocean-call-control-commands'] = json.dumps(call_control_commands.build())
-        elif isinstance(call_control_commands, AbstractMccc):
-            self._params['mocean-call-control-commands'] = json.dumps([call_control_commands.get_request_data()])
-        elif isinstance(call_control_commands, list):
-            self._params['mocean-call-control-commands'] = json.dumps(call_control_commands)
+    def set_mocean_command(self, mocean_command):
+        if isinstance(mocean_command, McBuilder):
+            self._params['mocean-command'] = json.dumps(mocean_command.build())
+        elif isinstance(mocean_command, AbstractMc):
+            self._params['mocean-command'] = json.dumps([mocean_command.get_request_data()])
+        elif isinstance(mocean_command, list):
+            self._params['mocean-command'] = json.dumps(mocean_command)
         else:
-            self._params['mocean-call-control-commands'] = call_control_commands
+            self._params['mocean-command'] = mocean_command
 
         return self
 
@@ -38,10 +38,10 @@ class Voice(AbstractClient):
         if params is None:
             params = {}
 
-        if 'mocean-call-control-commands' in params:
-            mccc = params['mocean-call-control-commands']
-            del params['mocean-call-control-commands']
-            self.set_call_control_commands(mccc)
+        if 'mocean-command' in params:
+            mc = params['mocean-command']
+            del params['mocean-command']
+            self.set_mocean_command(mc)
 
         super(Voice, self).create(params)
         self.create_final_params()

@@ -3,7 +3,7 @@ from unittest import TestCase
 
 import requests_mock
 
-from moceansdk import RequiredFieldException, McccBuilder, Mccc
+from moceansdk import RequiredFieldException, McBuilder, Mc
 from tests.testing_utils import TestingUtils
 
 
@@ -15,13 +15,13 @@ class TestVoice(TestCase):
         self.assertIsNotNone(voice._params['mocean-to'])
         self.assertEqual('test to', voice._params['mocean-to'])
 
-        voice.set_call_event_url('test call event url')
-        self.assertIsNotNone(voice._params['mocean-call-event-url'])
-        self.assertEqual('test call event url', voice._params['mocean-call-event-url'])
+        voice.set_event_url('test event url')
+        self.assertIsNotNone(voice._params['mocean-event-url'])
+        self.assertEqual('test event url', voice._params['mocean-event-url'])
 
-        voice.set_call_control_commands('test call control commands')
-        self.assertIsNotNone(voice._params['mocean-call-control-commands'])
-        self.assertEqual('test call control commands', voice._params['mocean-call-control-commands'])
+        voice.set_mocean_command('test mocean command')
+        self.assertIsNotNone(voice._params['mocean-command'])
+        self.assertEqual('test mocean command', voice._params['mocean-command'])
 
         voice.set_resp_format('json')
         self.assertIsNotNone(voice._params['mocean-resp-format'])
@@ -29,22 +29,22 @@ class TestVoice(TestCase):
 
         # test multiple call control commands
         voice = TestingUtils.get_client_obj().voice
-        voice.set_call_control_commands([{'action': 'say'}])
-        self.assertIsNotNone(voice._params['mocean-call-control-commands'])
-        self.assertEqual(json.dumps([{'action': 'say'}]), voice._params['mocean-call-control-commands'])
+        voice.set_mocean_command([{'action': 'say'}])
+        self.assertIsNotNone(voice._params['mocean-command'])
+        self.assertEqual(json.dumps([{'action': 'say'}]), voice._params['mocean-command'])
 
         voice = TestingUtils.get_client_obj().voice
-        builder_params = McccBuilder().add(Mccc.say("hello world"))
-        voice.set_call_control_commands(builder_params)
-        self.assertIsNotNone(voice._params['mocean-call-control-commands'])
-        self.assertEqual(json.dumps(builder_params.build()), voice._params['mocean-call-control-commands'])
+        builder_params = McBuilder().add(Mc.say("hello world"))
+        voice.set_mocean_command(builder_params)
+        self.assertIsNotNone(voice._params['mocean-command'])
+        self.assertEqual(json.dumps(builder_params.build()), voice._params['mocean-command'])
 
         voice = TestingUtils.get_client_obj().voice
-        mccc_params = Mccc.say('hello world')
-        voice.set_call_control_commands(mccc_params)
-        self.assertIsNotNone(voice._params['mocean-call-control-commands'])
-        self.assertEqual(json.dumps(McccBuilder().add(mccc_params).build()),
-                         voice._params['mocean-call-control-commands'])
+        mc_params = Mc.say('hello world')
+        voice.set_mocean_command(mc_params)
+        self.assertIsNotNone(voice._params['mocean-command'])
+        self.assertEqual(json.dumps(McBuilder().add(mc_params).build()),
+                         voice._params['mocean-command'])
 
     @requests_mock.Mocker()
     def test_json_call(self, m):
@@ -53,7 +53,7 @@ class TestVoice(TestCase):
         client = TestingUtils.get_client_obj()
         res = client.voice.call({
             'mocean-to': 'test to',
-            'mocean-call-control-commands': 'test mocean call control commands'
+            'mocean-command': 'test mocean call control commands'
         })
 
         self.assertEqual(res.__str__(), TestingUtils.get_response_string('voice.json'))

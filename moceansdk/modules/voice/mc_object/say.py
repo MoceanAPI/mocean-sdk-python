@@ -1,7 +1,7 @@
-from moceansdk.modules.voice.mccc_object import AbstractMccc
+from moceansdk.modules.voice.mc_object import AbstractMc
 
 
-class Say(AbstractMccc):
+class Say(AbstractMc):
     def __init__(self, params=None):
         super(Say, self).__init__(params)
 

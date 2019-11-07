@@ -1,7 +1,7 @@
-from moceansdk.modules.voice.mccc_object import AbstractMccc
+from moceansdk.modules.voice.mc_object import AbstractMc
 
 
-class Record(AbstractMccc):
+class Record(AbstractMc):
     def required_key(self):
         return []
 

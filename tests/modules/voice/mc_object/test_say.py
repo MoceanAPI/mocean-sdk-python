@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from moceansdk import RequiredFieldException
-from moceansdk.modules.voice.mccc_object.say import Say
+from moceansdk.modules.voice.mc_object.say import Say
 
 
 class TestSay(TestCase):

@@ -1,7 +1,7 @@
-from moceansdk.modules.voice.mccc_object import AbstractMccc
+from moceansdk.modules.voice.mc_object import AbstractMc
 
 
-class Dial(AbstractMccc):
+class Dial(AbstractMc):
     def set_to(self, to):
         self._params['to'] = to
         return self
