@@ -1,5 +1,7 @@
 import json
-from moceansdk.modules import AbstractClient
+from moceansdk.exceptions import MoceanErrorException
+from moceansdk.modules import AbstractClient, ResponseFactory
+from moceansdk.modules.response_factory import DotMapExtended
 from moceansdk.modules.voice.mc_object import AbstractMc
 from moceansdk.modules.voice.mc_builder import McBuilder
 
@@ -59,3 +61,19 @@ class Voice(AbstractClient):
 
         response = self._transmitter.post('/voice/hangup/%s' % call_uuid, self._params)
         return response
+
+    def recording(self, call_uuid):
+        self._required_fields = ['mocean-api-key', 'mocean-api-secret', 'mocean-call-uuid']
+
+        super(Voice, self).create({'mocean-call-uuid': call_uuid})
+        self.create_final_params()
+        self.is_required_field_set()
+
+        response = self._transmitter.send('get', '/voice/rec', self._params)
+
+        if response.headers.get('Content-Type') == 'audio/mpeg':
+            return DotMapExtended({'recording_buffer': response.content, 'filename': '%s.mp3' % call_uuid})
+
+        # this method will raise exception if there's error
+        processed_response = ResponseFactory.create_object_from_raw_response(response.text)
+        raise MoceanErrorException(processed_response['err_msg'], processed_response.set_raw_response(response.text))

@@ -28,9 +28,12 @@ class TestingUtils(object):
         return file_content
 
     @staticmethod
-    def intercept_mock_request(m, file_name, uri, method='GET', version='2'):
+    def intercept_mock_request(m, file_name, uri, method='GET', version='2', headers=None):
+        if headers is None:
+            headers = {}
+
         m.request(method, Transmitter.default_options()['base_url'] + "/rest/" + version + uri,
-                  text=TestingUtils.get_response_string(file_name))
+                  text=TestingUtils.get_response_string(file_name), headers=headers)
 
     @staticmethod
     def convert_qs_to_dict(qs):

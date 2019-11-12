@@ -21,10 +21,15 @@ class Transmitter(object):
         }
 
     def get(self, uri, params):
-        return self.send('get', uri, params)
+        return self.send_and_decode_response('get', uri, params)
 
     def post(self, uri, params):
-        return self.send('post', uri, params)
+        return self.send_and_decode_response('post', uri, params)
+
+    def send_and_decode_response(self, method, uri, params):
+        res = self.send(method, uri, params)
+
+        return self.format_response(res.text, uri, params['mocean-resp-format'] == 'xml')
 
     def send(self, method, uri, params):
         params['mocean-medium'] = 'PYTHON-SDK'
@@ -41,7 +46,10 @@ class Transmitter(object):
         elif method.lower() == 'post':
             res = self._options['request_session'].post(url, data=params or {})
 
-        return self.format_response(res.text, uri, params['mocean-resp-format'] == 'xml')
+        cloned_res_before_close = res
+        self._options['request_session'].close()
+
+        return cloned_res_before_close
 
     def format_response(self, response_text, uri=None, is_xml=False):
         raw_response = response_text
