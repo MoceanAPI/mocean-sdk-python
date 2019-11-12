@@ -16,7 +16,8 @@ class Transmitter(object):
     def default_options():
         return {
             "base_url": "https://rest.moceanapi.com",
-            "version": "2"
+            "version": "2",
+            "request_session": requests.Session()
         }
 
     def get(self, uri, params):
@@ -36,9 +37,9 @@ class Transmitter(object):
         res = None
 
         if method.lower() == 'get':
-            res = requests.get(url, params=params or {})
+            res = self._options['request_session'].get(url, params=params or {})
         elif method.lower() == 'post':
-            res = requests.post(url, data=params or {})
+            res = self._options['request_session'].post(url, data=params or {})
 
         return self.format_response(res.text, uri, params['mocean-resp-format'] == 'xml')
 
