@@ -53,13 +53,13 @@ class Voice(AbstractClient):
         return response
 
     def hangup(self, call_uuid):
-        self._required_fields = ['mocean-api-key', 'mocean-api-secret']
+        self._required_fields = ['mocean-api-key', 'mocean-api-secret', 'mocean-call-uuid']
 
-        super(Voice, self).create({})
+        super(Voice, self).create({'mocean-call-uuid': call_uuid})
         self.create_final_params()
         self.is_required_field_set()
 
-        response = self._transmitter.post('/voice/hangup/%s' % call_uuid, self._params)
+        response = self._transmitter.post('/voice/hangup', self._params)
         return response
 
     def recording(self, call_uuid):

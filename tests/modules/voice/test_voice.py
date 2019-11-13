@@ -78,7 +78,7 @@ class TestVoice(TestCase):
 
     @requests_mock.Mocker()
     def test_json_hangup(self, m):
-        TestingUtils.intercept_mock_request(m, 'hangup.json', '/voice/hangup/xxx-xxx-xxx-xxx', 'POST')
+        TestingUtils.intercept_mock_request(m, 'hangup.json', '/voice/hangup', 'POST')
 
         client = TestingUtils.get_client_obj()
         res = client.voice.hangup('xxx-xxx-xxx-xxx')
@@ -86,11 +86,13 @@ class TestVoice(TestCase):
         self.assertEqual(res.__str__(), TestingUtils.get_response_string('hangup.json'))
         self.assertEqual(res.status, '0')
 
+        rewind_body = TestingUtils.convert_qs_to_dict(m.last_request.body)
+        self.assertEqual(rewind_body['mocean-call-uuid'][0], 'xxx-xxx-xxx-xxx')
         self.assertTrue(m.called)
 
     @requests_mock.Mocker()
     def test_xml_hangup(self, m):
-        TestingUtils.intercept_mock_request(m, 'hangup.xml', '/voice/hangup/xxx-xxx-xxx-xxx', 'POST')
+        TestingUtils.intercept_mock_request(m, 'hangup.xml', '/voice/hangup', 'POST')
 
         client = TestingUtils.get_client_obj()
         res = client.voice.hangup('xxx-xxx-xxx-xxx')
@@ -98,6 +100,8 @@ class TestVoice(TestCase):
         self.assertEqual(res.__str__(), TestingUtils.get_response_string('hangup.xml'))
         self.assertEqual(res.status, '0')
 
+        rewind_body = TestingUtils.convert_qs_to_dict(m.last_request.body)
+        self.assertEqual(rewind_body['mocean-call-uuid'][0], 'xxx-xxx-xxx-xxx')
         self.assertTrue(m.called)
 
     @requests_mock.Mocker()
