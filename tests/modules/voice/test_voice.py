@@ -1,5 +1,4 @@
 import json
-from unittest import TestCase
 
 import requests_mock
 
@@ -7,9 +6,9 @@ from moceansdk import RequiredFieldException, McBuilder, Mc
 from tests.testing_utils import TestingUtils
 
 
-class TestVoice(TestCase):
+class TestVoice(TestingUtils):
     def test_setter_method(self):
-        voice = TestingUtils.get_client_obj().voice
+        voice = self.get_client_obj().voice
 
         voice.set_to('test to')
         self.assertIsNotNone(voice._params['mocean-to'])
@@ -28,18 +27,18 @@ class TestVoice(TestCase):
         self.assertEqual('json', voice._params['mocean-resp-format'])
 
         # test multiple call control commands
-        voice = TestingUtils.get_client_obj().voice
+        voice = self.get_client_obj().voice
         voice.set_mocean_command([{'action': 'say'}])
         self.assertIsNotNone(voice._params['mocean-command'])
         self.assertEqual(json.dumps([{'action': 'say'}]), voice._params['mocean-command'])
 
-        voice = TestingUtils.get_client_obj().voice
+        voice = self.get_client_obj().voice
         builder_params = McBuilder().add(Mc.say("hello world"))
         voice.set_mocean_command(builder_params)
         self.assertIsNotNone(voice._params['mocean-command'])
         self.assertEqual(json.dumps(builder_params.build()), voice._params['mocean-command'])
 
-        voice = TestingUtils.get_client_obj().voice
+        voice = self.get_client_obj().voice
         mc_params = Mc.say('hello world')
         voice.set_mocean_command(mc_params)
         self.assertIsNotNone(voice._params['mocean-command'])
@@ -48,65 +47,81 @@ class TestVoice(TestCase):
 
     @requests_mock.Mocker()
     def test_json_call(self, m):
-        TestingUtils.intercept_mock_request(m, 'voice.json', '/voice/dial', 'POST')
+        def request_callback(request, _context):
+            self.assertEqual(request.method, 'POST')
+            self.verify_param_with(request.body, {'mocean-to': 'test to',
+                                                  'mocean-command': 'test mocean call control commands'})
+            return self.get_response_string('voice.json')
 
-        client = TestingUtils.get_client_obj()
+        self.mock_http_request(m, '/voice/dial', request_callback)
+
+        client = self.get_client_obj()
         res = client.voice.call({
             'mocean-to': 'test to',
             'mocean-command': 'test mocean call control commands'
         })
 
-        self.assertEqual(res.__str__(), TestingUtils.get_response_string('voice.json'))
+        self.assertEqual(res.__str__(), self.get_response_string('voice.json'))
         self.__test_object(res)
 
         self.assertTrue(m.called)
 
     @requests_mock.Mocker()
     def test_xml_call(self, m):
-        TestingUtils.intercept_mock_request(m, 'voice.xml', '/voice/dial', 'POST')
+        def request_callback(_request, _context):
+            return self.get_response_string('voice.xml')
 
-        client = TestingUtils.get_client_obj()
+        self.mock_http_request(m, '/voice/dial', request_callback)
+
+        client = self.get_client_obj()
         res = client.voice.call({
             'mocean-to': 'test to',
             'mocean-resp-format': 'xml'
         })
 
-        self.assertEqual(res.__str__(), TestingUtils.get_response_string('voice.xml'))
+        self.assertEqual(res.__str__(), self.get_response_string('voice.xml'))
         self.__test_object(res)
 
         self.assertTrue(m.called)
 
     @requests_mock.Mocker()
     def test_json_hangup(self, m):
-        TestingUtils.intercept_mock_request(m, 'hangup.json', '/voice/hangup', 'POST')
+        def request_callback(request, _context):
+            self.assertEqual(request.method, 'POST')
+            self.verify_param_with(request.body, {'mocean-call-uuid': 'xxx-xxx-xxx-xxx'})
+            return self.get_response_string('hangup.json')
 
-        client = TestingUtils.get_client_obj()
+        self.mock_http_request(m, '/voice/hangup', request_callback)
+
+        client = self.get_client_obj()
         res = client.voice.hangup('xxx-xxx-xxx-xxx')
 
-        self.assertEqual(res.__str__(), TestingUtils.get_response_string('hangup.json'))
+        self.assertEqual(res.__str__(), self.get_response_string('hangup.json'))
         self.assertEqual(res.status, '0')
 
-        rewind_body = TestingUtils.convert_qs_to_dict(m.last_request.body)
-        self.assertEqual(rewind_body['mocean-call-uuid'][0], 'xxx-xxx-xxx-xxx')
         self.assertTrue(m.called)
 
     @requests_mock.Mocker()
     def test_xml_hangup(self, m):
-        TestingUtils.intercept_mock_request(m, 'hangup.xml', '/voice/hangup', 'POST')
+        def request_callback(_request, _context):
+            return self.get_response_string('hangup.xml')
 
-        client = TestingUtils.get_client_obj()
+        self.mock_http_request(m, '/voice/hangup', request_callback)
+
+        client = self.get_client_obj()
         res = client.voice.hangup('xxx-xxx-xxx-xxx')
 
-        self.assertEqual(res.__str__(), TestingUtils.get_response_string('hangup.xml'))
+        self.assertEqual(res.__str__(), self.get_response_string('hangup.xml'))
         self.assertEqual(res.status, '0')
 
-        rewind_body = TestingUtils.convert_qs_to_dict(m.last_request.body)
-        self.assertEqual(rewind_body['mocean-call-uuid'][0], 'xxx-xxx-xxx-xxx')
         self.assertTrue(m.called)
 
     @requests_mock.Mocker()
     def test_required_field_not_set(self, m):
-        TestingUtils.intercept_mock_request(m, 'voice.json', '/voice/dial', 'POST')
+        def request_callback(_request, _context):
+            return self.get_response_string('voice.json')
+
+        self.mock_http_request(m, '/voice/dial', request_callback)
 
         client = TestingUtils.get_client_obj()
         try:

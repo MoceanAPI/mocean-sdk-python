@@ -1,14 +1,12 @@
-from unittest import TestCase
-
 import requests_mock
 
 from moceansdk import RequiredFieldException
 from tests.testing_utils import TestingUtils
 
 
-class TestVerifyValidate(TestCase):
+class TestVerifyValidate(TestingUtils):
     def test_setter_method(self):
-        verify_validate = TestingUtils.get_client_obj().verify_validate
+        verify_validate = self.get_client_obj().verify_validate
 
         verify_validate.set_reqid("test reqid")
         self.assertIsNotNone(verify_validate._params["mocean-reqid"])
@@ -24,40 +22,52 @@ class TestVerifyValidate(TestCase):
 
     @requests_mock.Mocker()
     def test_json_send(self, m):
-        TestingUtils.intercept_mock_request(m, 'verify_code.json', '/verify/check', 'POST')
+        def request_callback(request, _context):
+            self.assertEqual(request.method, 'POST')
+            self.verify_param_with(request.body, {'mocean-reqid': 'test reqid',
+                                                  'mocean-code': 'test code'})
+            return self.get_response_string('verify_code.json')
 
-        client = TestingUtils.get_client_obj()
+        self.mock_http_request(m, '/verify/check', request_callback)
+
+        client = self.get_client_obj()
         res = client.verify_validate.send({
             'mocean-reqid': 'test reqid',
             'mocean-code': 'test code'
         })
 
-        self.assertEqual(res.__str__(), TestingUtils.get_response_string('verify_code.json'))
+        self.assertEqual(res.__str__(), self.get_response_string('verify_code.json'))
         self.__test_object(res)
 
         self.assertTrue(m.called)
 
     @requests_mock.Mocker()
     def test_xml_send(self, m):
-        TestingUtils.intercept_mock_request(m, 'verify_code.xml', '/verify/check', 'POST')
+        def request_callback(_request, _context):
+            return self.get_response_string('verify_code.xml')
 
-        client = TestingUtils.get_client_obj()
+        self.mock_http_request(m, '/verify/check', request_callback)
+
+        client = self.get_client_obj()
         res = client.verify_validate.send({
             'mocean-reqid': 'test reqid',
             'mocean-code': 'test code',
             'mocean-resp-format': 'xml'
         })
 
-        self.assertEqual(res.__str__(), TestingUtils.get_response_string('verify_code.xml'))
+        self.assertEqual(res.__str__(), self.get_response_string('verify_code.xml'))
         self.__test_object(res)
 
         self.assertTrue(m.called)
 
     @requests_mock.Mocker()
     def test_required_field_not_set(self, m):
-        TestingUtils.intercept_mock_request(m, 'verify_code.json', '/verify/check', 'POST')
+        def request_callback(_request, _context):
+            return self.get_response_string('verify_code.json')
 
-        client = TestingUtils.get_client_obj()
+        self.mock_http_request(m, '/verify/check', request_callback)
+
+        client = self.get_client_obj()
         try:
             client.verify_validate.send()
             self.fail()

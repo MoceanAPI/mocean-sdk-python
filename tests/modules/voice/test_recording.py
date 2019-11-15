@@ -1,16 +1,20 @@
-from unittest import TestCase
 import requests_mock
 from tests.testing_utils import TestingUtils
 from moceansdk.exceptions import MoceanErrorException
 
 
-class TestRecording(TestCase):
+class TestRecording(TestingUtils):
     @requests_mock.Mocker()
     def test_json_call(self, m):
-        TestingUtils.intercept_mock_request(m, 'recording.json', '/voice/rec', 'GET', '2',
-                                            {'Content-Type': 'audio/mpeg'})
+        def request_callback(request, context):
+            self.assertEqual(request.method, 'GET')
+            self.verify_param_with(request.query, {'mocean-call-uuid': 'xxx-xxx-xxx-xxx'})
+            context.headers['Content-Type'] = 'audio/mpeg'
+            return self.get_response_string('recording.json')
 
-        client = TestingUtils.get_client_obj()
+        self.mock_http_request(m, '/voice/rec', request_callback)
+
+        client = self.get_client_obj()
         recording = client.voice.recording('xxx-xxx-xxx-xxx')
 
         self.assertIsNotNone(recording.recording_buffer)
@@ -20,9 +24,12 @@ class TestRecording(TestCase):
 
     @requests_mock.Mocker()
     def test_error_call(self, m):
-        TestingUtils.intercept_mock_request(m, 'error_response.json', '/voice/rec')
+        def request_callback(_request, _context):
+            return self.get_response_string('error_response.json')
 
-        client = TestingUtils.get_client_obj()
+        self.mock_http_request(m, '/voice/rec', request_callback)
+
+        client = self.get_client_obj()
         self.assertRaises(MoceanErrorException, client.voice.recording, 'xxx-xxx-xxx-xxx')
 
         self.assertTrue(m.called)
