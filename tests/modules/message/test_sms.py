@@ -127,10 +127,10 @@ class TestSms(TestingUtils):
         self.__test_object(res)
 
         # v2 test
-        def request_callback(_request, _context):\
+        def request_callback_v2(_request, _context):\
             return self.get_response_string('message_v2.xml')
 
-        self.mock_http_request(m, '/sms', request_callback)
+        self.mock_http_request(m, '/sms', request_callback_v2)
 
         client = self.get_client_obj()
         res = client.sms.send({
