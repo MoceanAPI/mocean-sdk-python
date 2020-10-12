@@ -15,6 +15,7 @@ class AbstractClient(object):
     def create(self, params):
         if isinstance(params, dict):
             self._params.update(dict(params))
+        return self
 
     def create_final_params(self):
         tmp_params = dict()
