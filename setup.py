@@ -16,7 +16,7 @@ setuptools.setup(
     author='Micro Ocean Technologies Sdn Bhd',
     author_email='support@moceanapi.com',
     license='MIT',
-    install_requires=["requests>=2.20,<2.23", "xmltodict~=0.12.0", "dotmap~=1.3.0"],
+    install_requires=["requests>=2.20,<2.26", "xmltodict~=0.12.0", "dotmap~=1.3.0"],
     extras_require={
         'test': ['requests-mock>=1.6,<1.8'],
     },
