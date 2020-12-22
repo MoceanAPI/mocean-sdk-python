@@ -70,7 +70,7 @@ License
 
 This library is released under the [MIT License][license]
 
-[signup]: https://dashboard.moceanapi.com/register?medium=github&campaign=sdk-python
+[signup]: https://dashboard.moceanapi.com/register?medium=github&campaign=python-sdk
 [doc_main]: https://moceanapi.com/docs/?python
 [doc_sms]: https://moceanapi.com/docs/?python#send-sms
 [license]: LICENSE.txt
