@@ -58,6 +58,22 @@ class TestVerifyRequest(TestCase):
         })
 
         self.assertTrue(m.called)
+    
+    @requests_mock.Mocker()
+    def test_send_as_telegram_channel(self, m):
+        TestingUtils.intercept_mock_request(m, 'send_code.json', '/verify/req/telegram', 'POST')
+
+        client = TestingUtils.get_client_obj()
+        verify_request = client.verify_request
+        self.assertEqual(verify_request._channel, Channel.AUTO)
+        verify_request.send_as(Channel.TELEGRAM)
+        self.assertEqual(verify_request._channel, Channel.TELEGRAM)
+        verify_request.send({
+            'mocean-to': 'testing to',
+            'mocean-brand': 'testing brand'
+        })
+
+        self.assertTrue(m.called)
 
     @requests_mock.Mocker()
     def test_resend(self, m):
