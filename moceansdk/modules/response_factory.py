@@ -16,7 +16,6 @@ class ResponseFactory:
                 dict_res = dict_res['result']
             except Exception:
                 raise MoceanErrorException('unable to parse response, ' + raw_response)
-
         return DotMapExtended(dict_res)
 
 

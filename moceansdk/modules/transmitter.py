@@ -28,7 +28,6 @@ class Transmitter(object):
 
     def send_and_decode_response(self, method, uri, params):
         res = self.send(method, uri, params)
-
         return self.format_response(res.text, uri, params['mocean-resp-format'] == 'xml')
 
     def send(self, method, uri, params):
@@ -45,7 +44,7 @@ class Transmitter(object):
             res = self._options['request_session'].get(url, params=params or {})
         elif method.lower() == 'post':
             res = self._options['request_session'].post(url, data=params or {})
-
+      
         cloned_res_before_close = res
         self._options['request_session'].close()
 
@@ -64,7 +63,7 @@ class Transmitter(object):
                 response_text = response_text \
                     .replace("<result>", "<result><messages>") \
                     .replace("</result>", "</messages></result>")
-
+     
         processed_response = ResponseFactory.create_object_from_raw_response(
             response_text
                 .replace("<verify_request>", "")
@@ -72,7 +71,8 @@ class Transmitter(object):
                 .replace("<verify_check>", "")
                 .replace("</verify_check>", "")
         )
-
+    
+ 
         if 'status' in processed_response and processed_response['status'] != '0':
             raise MoceanErrorException(processed_response['err_msg'], processed_response.set_raw_response(raw_response))
 

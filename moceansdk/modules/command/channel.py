@@ -1,0 +1,2 @@
+SMS = 'sms'
+TELEGRAM = 'telegram'

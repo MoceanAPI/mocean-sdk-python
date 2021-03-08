@@ -74,3 +74,8 @@ class Client(object):
     def voice(self):
         from moceansdk.modules.voice.voice import Voice
         return Voice(self._obj_auth, self._transmitter)
+
+    @property
+    def command(self):
+        from moceansdk.modules.command.command import Command
+        return Command(self._obj_auth,self._transmitter)
