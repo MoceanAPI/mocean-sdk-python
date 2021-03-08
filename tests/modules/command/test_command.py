@@ -34,7 +34,6 @@ class TestCommand(TestCase):
 
         self.assertTrue(m.called)
 
- 
 
     def __test_object(self, command_response):
         self.assertIsInstance(command_response.toDict(), dict)

@@ -59,7 +59,7 @@ class TestPricing(TestCase):
         self.assertEqual(m.call_count, 2)
 
     def __test_object(self, pricing_response):
-        self.assertIsInstance(pricing_response, dict)
+        self.assertIsInstance(pricing_response.toDict(), dict)
         self.assertEqual(pricing_response.status, '0')
         self.assertEqual(len(pricing_response.destinations), 25)
         self.assertEqual(pricing_response.destinations[0].country, 'Default')

@@ -29,11 +29,11 @@ class DotMapExtended(DotMap):
         return self
 
     def toDict(self):
-        dict_value = super(DotMapExtended, self).toDict()
-        if '_DotMapExtended__raw_response' in dict_value:
-            del dict_value['_DotMapExtended__raw_response']
+        # dict_value = super(DotMapExtended, self).toDict()
+        if '_DotMapExtended__raw_response' in self.keys():
+            del self['_DotMapExtended__raw_response']
 
-        return dict_value
+        return self
 
     def __str__(self):
         return self.__raw_response

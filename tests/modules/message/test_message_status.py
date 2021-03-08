@@ -61,7 +61,7 @@ class TestMessageStatus(TestCase):
         self.assertFalse(m.called)
 
     def __test_object(self, message_status_response):
-        self.assertIsInstance(message_status_response, dict)
+        self.assertIsInstance(message_status_response.toDict(), dict)
         self.assertEqual(message_status_response.status, '0')
         self.assertEqual(message_status_response.message_status, '5')
         self.assertEqual(message_status_response.msgid, 'CPASS_restapi_C0000002737000000.0001')
