@@ -65,7 +65,7 @@ class TestNumberLookup(TestCase):
         self.assertFalse(m.called)
 
     def __test_object(self, number_lookup_response):
-        self.assertIsInstance(number_lookup_response.toDict(), dict)
+        self.assertIsInstance(number_lookup_response, dict)
         self.assertEqual(number_lookup_response.status, '0')
         self.assertEqual(number_lookup_response.msgid, 'CPASS_restapi_C00000000000000.0002')
         self.assertEqual(number_lookup_response.to, '60123456789')

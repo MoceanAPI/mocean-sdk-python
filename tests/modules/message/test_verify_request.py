@@ -115,6 +115,6 @@ class TestVerifyRequest(TestCase):
         self.assertFalse(m.called)
 
     def __test_object(self, verify_request_response):
-        self.assertIsInstance(verify_request_response.toDict(), dict)
+        self.assertIsInstance(verify_request_response, dict)
         self.assertEqual(verify_request_response.status, '0')
         self.assertEqual(verify_request_response.reqid, 'CPASS_restapi_C0000002737000000.0002')
