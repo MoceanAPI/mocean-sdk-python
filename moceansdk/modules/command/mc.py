@@ -30,3 +30,7 @@ class Mc():
     @staticmethod
     def telegram_request_contact():
         return tg_request_contact.RequestContact
+
+    @staticmethod
+    def send_sms():
+        return send_sms.SendSMS()

@@ -1,12 +1,11 @@
 from moceansdk.modules.command.mc_object import AbstractMc
-from moceansdk.modules.command.mc_object import contact_type
 
 
-class TGRequestContact(AbstractMc):
+class TgRequestContact(AbstractMc):
+
     def __init__(self):
         super().__init__()
-        self._params['tg_keyboard'] = {
-            'button_text': 'Share Phone number', 'button_request': 'contact'}
+        self.set_button_text('Share button')
 
     def action(self):
         return 'send-telegram'
@@ -35,6 +34,8 @@ class TGRequestContact(AbstractMc):
         self._params['content']['text'] = _text
         return self
 
-    def set_button(self, _text):
+    def set_button_text(self, _text):
+        self._params['tg_keyboard'] = {}
+        self._params['tg_keyboard']['button_request'] = 'contact'
         self._params['tg_keyboard']['button_text'] = _text
         return self
