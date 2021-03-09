@@ -7,7 +7,7 @@ from moceansdk.modules.command.mc_builder import McBuilder
 
 class TestMcBuilder(TestCase):
     def test_add(self):
-        tg_send_text = Mc.telegram_send_text().set_from("test from").set_to("test to").set_content("test content")
+        tg_send_text = Mc().telegram_send_text().set_from('test from').set_to("test to").set_content("test content")
 
         builder = McBuilder()
         builder.add(tg_send_text)

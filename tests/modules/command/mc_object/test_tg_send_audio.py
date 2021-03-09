@@ -3,17 +3,18 @@ from unittest import TestCase
 from moceansdk import RequiredFieldException
 from moceansdk.modules.command.mc_object.tg_send_audio import TgSendAudio
 
+
 class TestTgSendText(TestCase):
-    def testParams(self):       
+    def testParams(self):
         params = {
             "action": "send-telegram",
             "from": {
                 "type": "bot_username",
-                "id": "test id"
+                "id": "bot id"
             },
             "to": {
                 "type": "chat_id",
-                "id": "test id"
+                "id": "chat id"
             },
             "content": {
                 "type": "audio",
@@ -21,15 +22,13 @@ class TestTgSendText(TestCase):
                 "text": "test text"
             }
         }
-      
+
         req = TgSendAudio()
-        req.set_from("test from")
-        req.set_to("test to")
-        req.set_content("test url", "test content")
+        req.set_from("bot id")
+        req.set_to("chat id")
+        req.set_content("test url", "test text")
 
         self.assertEqual(params, req.get_request_data())
-
-
 
     def test_if_required_field_not_set(self):
         try:

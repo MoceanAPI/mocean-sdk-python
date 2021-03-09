@@ -3,31 +3,31 @@ from unittest import TestCase
 from moceansdk import RequiredFieldException
 from moceansdk.modules.command.mc_object.send_sms import SendSMS
 
+
 class TestTgSendText(TestCase):
-    def testParams(self):       
+    def testParams(self):
         params = {
             "action": "send-sms",
             "from": {
-                "type": "bot_username",
-                "id": "test id"
+                "type": "phone_num",
+                "id": "123456789"
             },
             "to": {
-                "type": "chat_id",
-                "id": "test id"
+                "type": "phone_num",
+                "id": "987654321"
             },
             "content": {
                 "type": "text",
                 "text": "test text"
             }
         }
-      
+
         req = SendSMS()
-        req.set_from("test from")
-        req.set_to("test to")
-        req.set_content("test content")
+        req.set_from("123456789")
+        req.set_to("987654321")
+        req.set_content("test text")
 
         self.assertEqual(params, req.get_request_data())
-
 
     def test_if_required_field_not_set(self):
         try:
