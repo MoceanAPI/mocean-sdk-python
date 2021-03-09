@@ -20,9 +20,11 @@ class TestRecording(TestCase):
 
     @requests_mock.Mocker()
     def test_error_call(self, m):
-        TestingUtils.intercept_mock_request(m, 'error_response.json', '/voice/rec')
+        TestingUtils.intercept_mock_request(
+            m, 'error_response.json', '/voice/rec')
 
         client = TestingUtils.get_client_obj()
-        self.assertRaises(MoceanErrorException, client.voice.recording, 'xxx-xxx-xxx-xxx')
+        self.assertRaises(MoceanErrorException,
+                          client.voice.recording, 'xxx-xxx-xxx-xxx')
 
         self.assertTrue(m.called)

@@ -5,7 +5,8 @@ class NumberLookup(AbstractClient):
 
     def __init__(self, obj_auth, transmitter):
         super(NumberLookup, self).__init__(obj_auth, transmitter)
-        self._required_fields = ['mocean-api-key', 'mocean-api-secret', 'mocean-to']
+        self._required_fields = ['mocean-api-key',
+                                 'mocean-api-secret', 'mocean-to']
 
     def set_to(self, param):
         self._params['mocean-to'] = param

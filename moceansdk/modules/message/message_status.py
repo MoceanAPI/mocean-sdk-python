@@ -5,7 +5,8 @@ class MessageStatus(AbstractClient):
 
     def __init__(self, obj_auth, transmitter):
         super(MessageStatus, self).__init__(obj_auth, transmitter)
-        self._required_fields = ['mocean-api-key', 'mocean-api-secret', 'mocean-msgid']
+        self._required_fields = ['mocean-api-key',
+                                 'mocean-api-secret', 'mocean-msgid']
 
     def set_msgid(self, param):
         self._params['mocean-msgid'] = param

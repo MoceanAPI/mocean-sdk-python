@@ -13,9 +13,6 @@ class TgRequestContact(AbstractMc):
     def required_key(self):
         return ('to', 'from')
 
-    def required_key(self):
-        return ('from', 'to', 'content', 'tg_keyboard')
-
     def set_to(self, _to, _contact_type='chat_id'):
         self._params['to'] = {}
         self._params['to']['type'] = _contact_type

@@ -24,7 +24,8 @@ class TestVerifyValidate(TestCase):
 
     @requests_mock.Mocker()
     def test_json_send(self, m):
-        TestingUtils.intercept_mock_request(m, 'verify_code.json', '/verify/check', 'POST')
+        TestingUtils.intercept_mock_request(
+            m, 'verify_code.json', '/verify/check', 'POST')
 
         client = TestingUtils.get_client_obj()
         res = client.verify_validate.send({
@@ -32,14 +33,16 @@ class TestVerifyValidate(TestCase):
             'mocean-code': 'test code'
         })
 
-        self.assertEqual(res.__str__(), TestingUtils.get_response_string('verify_code.json'))
+        self.assertEqual(
+            res.__str__(), TestingUtils.get_response_string('verify_code.json'))
         self.__test_object(res)
 
         self.assertTrue(m.called)
 
     @requests_mock.Mocker()
     def test_xml_send(self, m):
-        TestingUtils.intercept_mock_request(m, 'verify_code.xml', '/verify/check', 'POST')
+        TestingUtils.intercept_mock_request(
+            m, 'verify_code.xml', '/verify/check', 'POST')
 
         client = TestingUtils.get_client_obj()
         res = client.verify_validate.send({
@@ -48,14 +51,16 @@ class TestVerifyValidate(TestCase):
             'mocean-resp-format': 'xml'
         })
 
-        self.assertEqual(res.__str__(), TestingUtils.get_response_string('verify_code.xml'))
+        self.assertEqual(
+            res.__str__(), TestingUtils.get_response_string('verify_code.xml'))
         self.__test_object(res)
 
         self.assertTrue(m.called)
 
     @requests_mock.Mocker()
     def test_required_field_not_set(self, m):
-        TestingUtils.intercept_mock_request(m, 'verify_code.json', '/verify/check', 'POST')
+        TestingUtils.intercept_mock_request(
+            m, 'verify_code.json', '/verify/check', 'POST')
 
         client = TestingUtils.get_client_obj()
         try:
@@ -69,4 +74,5 @@ class TestVerifyValidate(TestCase):
     def __test_object(self, verify_validate_response):
         self.assertIsInstance(verify_validate_response.toDict(), dict)
         self.assertEqual(verify_validate_response.status, '0')
-        self.assertEqual(verify_validate_response.reqid, 'CPASS_restapi_C0000002737000000.0002')
+        self.assertEqual(verify_validate_response.reqid,
+                         'CPASS_restapi_C0000002737000000.0002')

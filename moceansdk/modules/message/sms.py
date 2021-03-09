@@ -5,7 +5,8 @@ class Sms(AbstractClient):
 
     def __init__(self, obj_auth, transmitter):
         super(Sms, self).__init__(obj_auth, transmitter)
-        self._required_fields = ['mocean-api-key', 'mocean-api-secret', 'mocean-text', 'mocean-from', 'mocean-to']
+        self._required_fields = [
+            'mocean-api-key', 'mocean-api-secret', 'mocean-text', 'mocean-from', 'mocean-to']
 
     def set_from(self, param):
         self._params['mocean-from'] = param
@@ -41,7 +42,8 @@ class Sms(AbstractClient):
         try:
             datetime.datetime.strptime(param, "%Y-%m-%d")
         except ValueError:
-            raise ValueError("Incorrect schedule format. Example schedule 2018-01-01 (YYYY-MM-DD).")
+            raise ValueError(
+                "Incorrect schedule format. Example schedule 2018-01-01 (YYYY-MM-DD).")
         self._params['mocean-schedule'] = param
         return self
 

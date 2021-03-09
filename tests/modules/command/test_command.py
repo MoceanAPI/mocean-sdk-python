@@ -1,9 +1,8 @@
-import json
 from unittest import TestCase
 
 import requests_mock
 
-from moceansdk import RequiredFieldException, McBuilder, Mc
+from moceansdk import McBuilder, Mc
 from tests.testing_utils import TestingUtils
 
 

@@ -37,14 +37,16 @@ class Transmitter(object):
         if 'mocean-resp-format' not in params:
             params['mocean-resp-format'] = 'json'
 
-        url = self._options['base_url'] + '/rest/' + self._options['version'] + uri
+        url = self._options['base_url'] + \
+            '/rest/' + self._options['version'] + uri
         res = None
 
         if method.lower() == 'get':
-            res = self._options['request_session'].get(url, params=params or {})
+            res = self._options['request_session'].get(
+                url, params=params or {})
         elif method.lower() == 'post':
             res = self._options['request_session'].post(url, data=params or {})
-      
+
         cloned_res_before_close = res
         self._options['request_session'].close()
 
@@ -63,25 +65,26 @@ class Transmitter(object):
                 response_text = response_text \
                     .replace("<result>", "<result><messages>") \
                     .replace("</result>", "</messages></result>")
-     
+
         processed_response = ResponseFactory.create_object_from_raw_response(
             response_text
-                .replace("<verify_request>", "")
-                .replace("</verify_request>", "")
-                .replace("<verify_check>", "")
-                .replace("</verify_check>", "")
+            .replace("<verify_request>", "")
+            .replace("</verify_request>", "")
+            .replace("<verify_check>", "")
+            .replace("</verify_check>", "")
         )
-    
- 
+
         if 'status' in processed_response and processed_response['status'] != '0':
-            raise MoceanErrorException(processed_response['err_msg'], processed_response.set_raw_response(raw_response))
+            raise MoceanErrorException(
+                processed_response['err_msg'], processed_response.set_raw_response(raw_response))
 
         # post process response
         if uri == '/account/pricing' and is_xml:
             processed_response.destinations = processed_response.destinations.destination
         elif uri == '/sms' and is_xml:
             if not isinstance(processed_response.messages.message, list):
-                processed_response.messages.message = [processed_response.messages.message]
+                processed_response.messages.message = [
+                    processed_response.messages.message]
             processed_response.messages = processed_response.messages.message
         elif uri == '/voice/dial' and is_xml:
             if not isinstance(processed_response.calls.call, list):
