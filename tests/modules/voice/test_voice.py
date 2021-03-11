@@ -134,6 +134,6 @@ class TestVoice(TestCase):
         self.assertEqual(voice_response.calls[0].status, '0')
         self.assertEqual(voice_response.calls[0].receiver, '60123456789')
         self.assertEqual(
-            voice_response.calls[0]['session-uuid'], 'xxx-xxx-xxx-xxx')
+            voice_response.calls[0]['session_uuid'], 'xxx-xxx-xxx-xxx')
         self.assertEqual(
-            voice_response.calls[0]['call-uuid'], 'xxx-xxx-xxx-xxx')
+            voice_response.calls[0]['call_uuid'], 'xxx-xxx-xxx-xxx')
