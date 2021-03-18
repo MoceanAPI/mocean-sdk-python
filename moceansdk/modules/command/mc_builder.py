@@ -2,7 +2,7 @@ from moceansdk import MoceanErrorException
 from moceansdk.modules.command.mc_object import AbstractMc
 
 
-class McBuilder(object):
+class McBuilder():
     def __init__(self):
         self._mc = []
 
