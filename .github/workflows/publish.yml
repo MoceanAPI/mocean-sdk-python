@@ -24,15 +24,11 @@ jobs:
     - name: Setup distribution folder
       run: |
         python setup.py sdist bdist_wheel
-        echo "a:"
-        echo ${{ secrets.secrets.TEST_PYPI_API_TOKEN }}
-        echo "b:"
-        echo ${{ secrets.TEST_PYPI_API_TOKEN }}
 
-    - name: Publish distribution to Test PyPI
+    - name: Publish distribution to PyPI
       if: startsWith(github.ref, 'refs/tags')
       env:
         TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
       run: |
         twine upload dist/*

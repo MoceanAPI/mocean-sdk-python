@@ -4,7 +4,6 @@ on:
   push:
     paths-ignore:
     - "**.md"
-    - ".github/workflows/**"
   pull_request:
     paths-ignore:
     - "**.md"
