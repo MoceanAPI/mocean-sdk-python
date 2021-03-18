@@ -133,3 +133,23 @@ class TestMc(TestCase):
                          'tg_keyboard']['button_request'])
         self.assertEqual('button text', tg_request_contact.get_request_data()[
                          'tg_keyboard']['button_text'])
+
+    def test_send_sms(self):
+        send_sms = Mc.send_sms()
+        send_sms.set_from("from num").set_to(
+            "to num").set_content("hello!")
+
+        self.assertEqual(
+            'phone_num', send_sms.get_request_data()['from']['type'])
+        self.assertEqual(
+            'from num', send_sms.get_request_data()['from']['id'])
+        self.assertEqual(
+            'phone_num', send_sms.get_request_data()['to']['type'])
+        self.assertEqual(
+            'to num', send_sms.get_request_data()['to']['id'])
+
+        self.assertEqual('text', send_sms.get_request_data()[
+                         'content']['type'])
+        self.assertEqual('hello!', send_sms.get_request_data()[
+                         'content']['text'])
+
