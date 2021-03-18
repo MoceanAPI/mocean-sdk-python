@@ -29,9 +29,9 @@ class Command(AbstractClient):
             self._params['mocean-command'] = command
         return self
 
-    def set_channel(self, channel):
-        self.channel = channel
-        return self
+    # def set_channel(self, channel):
+    #     self.channel = channel
+    #     return self
 
     def execute(self, params=None):
         if params == None:

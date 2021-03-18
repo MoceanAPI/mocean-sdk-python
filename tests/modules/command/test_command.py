@@ -3,6 +3,7 @@ from unittest import TestCase
 import requests_mock
 import json
 
+from moceansdk import RequiredFieldException
 from moceansdk.modules.command.mc import Mc
 from moceansdk.modules.command.mc_builder import McBuilder
 from tests.testing_utils import TestingUtils
@@ -75,6 +76,20 @@ class TestCommand(TestCase):
         self.__test_object(res)
 
         self.assertTrue(m.called)
+
+    @requests_mock.Mocker()
+    def test_required_field_not_set(self, m):
+        TestingUtils.intercept_mock_request(
+            m, 'command.json', '/send-message', 'POST')
+
+        client = TestingUtils.get_client_obj()
+        try:
+            client.voice.call()
+            self.fail()
+        except RequiredFieldException:
+            pass
+
+        self.assertFalse(m.called)
 
     def __test_object(self, command_response):
         self.assertIsInstance(command_response.toDict(), dict)
