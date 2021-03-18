@@ -1,3 +1,4 @@
+from builtins import super
 from moceansdk.modules.command.mc_object import AbstractMc
 
 
