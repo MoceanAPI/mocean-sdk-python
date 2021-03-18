@@ -1,8 +1,10 @@
 from unittest import TestCase
 
 import requests_mock
+import json
 
-from moceansdk import Mc
+from moceansdk.modules.command.mc import Mc
+from moceansdk.modules.command.mc_builder import McBuilder
 from tests.testing_utils import TestingUtils
 
 
@@ -17,6 +19,44 @@ class TestCommand(TestCase):
         command.set_command('test mocean command')
         self.assertIsNotNone(command._params['mocean-command'])
         self.assertEqual('test mocean command',
+                         command._params['mocean-command'])
+
+        # Test different set_command types
+        command = TestingUtils.get_client_obj().command
+        params = {
+            "action": "send-telegram",
+            "from": {
+                "type": "bot_username",
+                "id": "username"
+            },
+            "to": {
+                "type": "chat_id",
+                "id": "987654321"
+            },
+            "content": {
+                "type": "text",
+                "text": "test text"
+            }
+        }
+        command.set_command([params])
+        self.assertIsNotNone(command._params['mocean-command'])
+        self.assertEqual(json.dumps(
+            [params]), command._params['mocean-command'])
+
+        command = TestingUtils.get_client_obj().command
+        builder_params = McBuilder().add(Mc.telegram_send_text().set_from(
+            'username').set_to('chat_id').set_content('test text'))
+        command.set_command(builder_params)
+        self.assertIsNotNone(command._params['mocean-command'])
+        self.assertEqual(json.dumps(builder_params.build()),
+                         command._params['mocean-command'])
+
+        command = TestingUtils.get_client_obj().command
+        mc_params = Mc.telegram_send_text().set_from(
+            'username').set_to('chat_id').set_content('test text')
+        command.set_command(mc_params)
+        self.assertIsNotNone(command._params['mocean-command'])
+        self.assertEqual(json.dumps(McBuilder().add(mc_params).build()),
                          command._params['mocean-command'])
 
     @requests_mock.Mocker()

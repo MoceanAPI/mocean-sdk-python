@@ -17,9 +17,9 @@ class AbstractMc(object):
         self._params['action'] = self.action()
         return self._params
 
-    def create_dict_for_param(self, name):
-        if self._params.get(name) == None:
-            self._params[name] = {}
+    # def create_dict_for_param(self, name):
+    #     if self._params.get(name) == None:
+    #         self._params[name] = {}
 
     def required_key(self):
         raise NotImplementedError("AbstractMc is a abstract class")
