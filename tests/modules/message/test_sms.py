@@ -98,14 +98,16 @@ class TestSms(TestCase):
             'mocean-text': 'test text'
         })
 
-        self.assertEqual(res.__str__(), TestingUtils.get_response_string('message.json'))
+        self.assertEqual(
+            res.__str__(), TestingUtils.get_response_string('message.json'))
         self.__test_object(res)
 
         self.assertTrue(m.called)
 
     @requests_mock.Mocker()
     def test_xml_send(self, m):
-        TestingUtils.intercept_mock_request(m, 'message.xml', '/sms', 'POST', '1')
+        TestingUtils.intercept_mock_request(
+            m, 'message.xml', '/sms', 'POST', '1')
 
         client = TestingUtils.get_client_obj(Transmitter({'version': '1'}))
         res = client.sms.send({
@@ -115,11 +117,13 @@ class TestSms(TestCase):
             'mocean-resp-format': 'xml'
         })
 
-        self.assertEqual(res.__str__(), TestingUtils.get_response_string('message.xml'))
+        self.assertEqual(
+            res.__str__(), TestingUtils.get_response_string('message.xml'))
         self.__test_object(res)
 
         # v2 test
-        TestingUtils.intercept_mock_request(m, 'message_v2.xml', '/sms', 'POST')
+        TestingUtils.intercept_mock_request(
+            m, 'message_v2.xml', '/sms', 'POST')
 
         client = TestingUtils.get_client_obj()
         res = client.sms.send({
@@ -129,7 +133,8 @@ class TestSms(TestCase):
             'mocean-resp-format': 'xml'
         })
 
-        self.assertEqual(res.__str__(), TestingUtils.get_response_string('message_v2.xml'))
+        self.assertEqual(
+            res.__str__(), TestingUtils.get_response_string('message_v2.xml'))
         self.__test_object(res)
 
         self.assertEqual(m.call_count, 2)
@@ -151,4 +156,5 @@ class TestSms(TestCase):
         self.assertIsInstance(sms_response.toDict(), dict)
         self.assertEqual(sms_response.messages[0].status, '0')
         self.assertEqual(sms_response.messages[0].receiver, '60123456789')
-        self.assertEqual(sms_response.messages[0].msgid, 'CPASS_restapi_C0000002737000000.0001')
+        self.assertEqual(
+            sms_response.messages[0].msgid, 'CPASS_restapi_C0000002737000000.0001')

@@ -5,6 +5,9 @@ python:
   - "3.4"
   - "3.5"
   - "3.6"
+  - "3.7"
+  - "3.8"
+  - "3.9"
 
 matrix:
   include:
@@ -30,5 +33,5 @@ deploy:
     secure: EGiWOEdTK83HGjbACDu8d7d/Nq9gG/Sh+zdlGkViEECNFgtFeyFC2GOwlWdupI9hHZ4tXSBCtc9Vwsh0SzR9sAiALDcCxo9IzvOj2+kqoRqrBH9IgbMrP9l8e8g/GaCnZ244p7qvoZ/8MH2vO6ZqgKd8yHmLYAIs/UXNC737fxhv+ofjlPoKm7aDBsL50hu+VFDWwTDI9tGHb/qQd+Os0X3h5lW+DCHB29RtjF69mQaUAU4ykszCtZIUFxbP8gLwKRqsWDe/DHT+5TFDqYCb4/3jlp5IeNQ1BnSxNvT9KdY8O44rHMS762Sz4f+ysTbD2gLJqkYbbcge7mh0BAYPTxaFV1+u6d2Z95qWvbE0qn+Q9nQV76IwS3A9rPxP/WjHRpNCzDO016oU1B9CjcH2VzPUeLs+rIJ83TqNtpiJD2AcMyo8UX2HhqNzKn6cRh+KhULR+9rkN60rcOrbEguigTR+TXkVQDvEm044TlQaa3hM+sQwFplZX5PqzgOAxM79PtvIr+h+5Sjpozc98cmpoqQdfCMIWE9o0WuNFHrBONFrYe4pxeHEWTx4mfU4wgbTCzt7jqPs6B6h67m11kd3+zytcydP4tXB3KD6Rg9k8+E2B774AQRGdJVA/vdVtqCclVE/0CI9M5Pry5sdQ8noslM6WCiWVoZcWhk61jHxciQ=
   on:
     tags: true
-    python: "3.6"
+    python: "3.7"
   skip_cleanup: true

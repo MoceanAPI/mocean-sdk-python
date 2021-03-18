@@ -10,7 +10,8 @@ class Voice(AbstractClient):
 
     def __init__(self, obj_auth, transmitter):
         super(Voice, self).__init__(obj_auth, transmitter)
-        self._required_fields = ['mocean-api-key', 'mocean-api-secret', 'mocean-to']
+        self._required_fields = ['mocean-api-key',
+                                 'mocean-api-secret', 'mocean-to']
 
     def set_to(self, to):
         self._params['mocean-to'] = to
@@ -24,7 +25,8 @@ class Voice(AbstractClient):
         if isinstance(mocean_command, McBuilder):
             self._params['mocean-command'] = json.dumps(mocean_command.build())
         elif isinstance(mocean_command, AbstractMc):
-            self._params['mocean-command'] = json.dumps([mocean_command.get_request_data()])
+            self._params['mocean-command'] = json.dumps(
+                [mocean_command.get_request_data()])
         elif isinstance(mocean_command, list):
             self._params['mocean-command'] = json.dumps(mocean_command)
         else:
@@ -53,7 +55,8 @@ class Voice(AbstractClient):
         return response
 
     def hangup(self, call_uuid):
-        self._required_fields = ['mocean-api-key', 'mocean-api-secret', 'mocean-call-uuid']
+        self._required_fields = ['mocean-api-key',
+                                 'mocean-api-secret', 'mocean-call-uuid']
 
         super(Voice, self).create({'mocean-call-uuid': call_uuid})
         self.create_final_params()
@@ -63,7 +66,8 @@ class Voice(AbstractClient):
         return response
 
     def recording(self, call_uuid):
-        self._required_fields = ['mocean-api-key', 'mocean-api-secret', 'mocean-call-uuid']
+        self._required_fields = ['mocean-api-key',
+                                 'mocean-api-secret', 'mocean-call-uuid']
 
         super(Voice, self).create({'mocean-call-uuid': call_uuid})
         self.create_final_params()
@@ -75,5 +79,7 @@ class Voice(AbstractClient):
             return DotMapExtended({'recording_buffer': response.content, 'filename': '%s.mp3' % call_uuid})
 
         # this method will raise exception if there's error
-        processed_response = ResponseFactory.create_object_from_raw_response(response.text)
-        raise MoceanErrorException(processed_response['err_msg'], processed_response.set_raw_response(response.text))
+        processed_response = ResponseFactory.create_object_from_raw_response(
+            response.text)
+        raise MoceanErrorException(
+            processed_response['err_msg'], processed_response.set_raw_response(response.text))

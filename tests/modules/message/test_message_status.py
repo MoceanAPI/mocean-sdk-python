@@ -20,21 +20,24 @@ class TestMessageStatus(TestCase):
 
     @requests_mock.Mocker()
     def test_json_inqury(self, m):
-        TestingUtils.intercept_mock_request(m, 'message_status.json', '/report/message')
+        TestingUtils.intercept_mock_request(
+            m, 'message_status.json', '/report/message')
 
         client = TestingUtils.get_client_obj()
         res = client.message_status.inquiry({
             'mocean-msgid': 'test msg id'
         })
 
-        self.assertEqual(res.__str__(), TestingUtils.get_response_string('message_status.json'))
+        self.assertEqual(
+            res.__str__(), TestingUtils.get_response_string('message_status.json'))
         self.__test_object(res)
 
         self.assertTrue(m.called)
 
     @requests_mock.Mocker()
     def test_xml_inquiry(self, m):
-        TestingUtils.intercept_mock_request(m, 'message_status.xml', '/report/message')
+        TestingUtils.intercept_mock_request(
+            m, 'message_status.xml', '/report/message')
 
         client = TestingUtils.get_client_obj()
         res = client.message_status.inquiry({
@@ -42,14 +45,16 @@ class TestMessageStatus(TestCase):
             'mocean-resp-format': 'xml'
         })
 
-        self.assertEqual(res.__str__(), TestingUtils.get_response_string('message_status.xml'))
+        self.assertEqual(
+            res.__str__(), TestingUtils.get_response_string('message_status.xml'))
         self.__test_object(res)
 
         self.assertTrue(m.called)
 
     @requests_mock.Mocker()
     def test_required_field_not_set(self, m):
-        TestingUtils.intercept_mock_request(m, 'message_status.json', '/report/message')
+        TestingUtils.intercept_mock_request(
+            m, 'message_status.json', '/report/message')
 
         client = TestingUtils.get_client_obj()
         try:
@@ -64,5 +69,6 @@ class TestMessageStatus(TestCase):
         self.assertIsInstance(message_status_response.toDict(), dict)
         self.assertEqual(message_status_response.status, '0')
         self.assertEqual(message_status_response.message_status, '5')
-        self.assertEqual(message_status_response.msgid, 'CPASS_restapi_C0000002737000000.0001')
+        self.assertEqual(message_status_response.msgid,
+                         'CPASS_restapi_C0000002737000000.0001')
         self.assertEqual(message_status_response.credit_deducted, '0.0000')

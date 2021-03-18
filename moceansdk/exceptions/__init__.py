@@ -1,7 +1,8 @@
 class MoceanErrorException(Exception):
     def __init__(self, msg, error_response=None):
         if error_response is not None:
-            super(MoceanErrorException, self).__init__(error_response['err_msg'])
+            super(MoceanErrorException, self).__init__(
+                error_response['err_msg'])
             self._error_response = error_response
         else:
             super(MoceanErrorException, self).__init__(msg)

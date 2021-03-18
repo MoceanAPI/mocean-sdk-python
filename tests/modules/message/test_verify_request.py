@@ -25,19 +25,23 @@ class TestVerifyRequest(TestCase):
 
         verify_request.set_code_length("test code length")
         self.assertIsNotNone(verify_request._params["mocean-code-length"])
-        self.assertEqual("test code length", verify_request._params["mocean-code-length"])
+        self.assertEqual("test code length",
+                         verify_request._params["mocean-code-length"])
 
         verify_request.set_template("test template")
         self.assertIsNotNone(verify_request._params["mocean-template"])
-        self.assertEqual("test template", verify_request._params["mocean-template"])
+        self.assertEqual(
+            "test template", verify_request._params["mocean-template"])
 
         verify_request.set_pin_validity("test pin validity")
         self.assertIsNotNone(verify_request._params["mocean-pin-validity"])
-        self.assertEqual("test pin validity", verify_request._params["mocean-pin-validity"])
+        self.assertEqual("test pin validity",
+                         verify_request._params["mocean-pin-validity"])
 
         verify_request.set_next_event_wait("test next event wait")
         self.assertIsNotNone(verify_request._params["mocean-next-event-wait"])
-        self.assertEqual("test next event wait", verify_request._params["mocean-next-event-wait"])
+        self.assertEqual("test next event wait",
+                         verify_request._params["mocean-next-event-wait"])
 
         verify_request.set_resp_format("json")
         self.assertIsNotNone(verify_request._params["mocean-resp-format"])
@@ -45,7 +49,8 @@ class TestVerifyRequest(TestCase):
 
     @requests_mock.Mocker()
     def test_send_as_sms_channel(self, m):
-        TestingUtils.intercept_mock_request(m, 'send_code.json', '/verify/req/sms', 'POST')
+        TestingUtils.intercept_mock_request(
+            m, 'send_code.json', '/verify/req/sms', 'POST')
 
         client = TestingUtils.get_client_obj()
         verify_request = client.verify_request
@@ -60,8 +65,26 @@ class TestVerifyRequest(TestCase):
         self.assertTrue(m.called)
 
     @requests_mock.Mocker()
+    def test_send_as_telegram_channel(self, m):
+        TestingUtils.intercept_mock_request(
+            m, 'send_code.json', '/verify/req/telegram', 'POST')
+
+        client = TestingUtils.get_client_obj()
+        verify_request = client.verify_request
+        self.assertEqual(verify_request._channel, Channel.AUTO)
+        verify_request.send_as(Channel.TELEGRAM)
+        self.assertEqual(verify_request._channel, Channel.TELEGRAM)
+        verify_request.send({
+            'mocean-to': 'testing to',
+            'mocean-brand': 'testing brand'
+        })
+
+        self.assertTrue(m.called)
+
+    @requests_mock.Mocker()
     def test_resend(self, m):
-        TestingUtils.intercept_mock_request(m, 'send_code.json', '/verify/resend/sms', 'POST')
+        TestingUtils.intercept_mock_request(
+            m, 'send_code.json', '/verify/resend/sms', 'POST')
 
         client = TestingUtils.get_client_obj()
         client.verify_request.resend({
@@ -72,7 +95,8 @@ class TestVerifyRequest(TestCase):
 
     @requests_mock.Mocker()
     def test_json_send(self, m):
-        TestingUtils.intercept_mock_request(m, 'send_code.json', '/verify/req', 'POST')
+        TestingUtils.intercept_mock_request(
+            m, 'send_code.json', '/verify/req', 'POST')
 
         client = TestingUtils.get_client_obj()
         res = client.verify_request.send({
@@ -80,14 +104,16 @@ class TestVerifyRequest(TestCase):
             'mocean-brand': 'test brand'
         })
 
-        self.assertEqual(res.__str__(), TestingUtils.get_response_string('send_code.json'))
+        self.assertEqual(
+            res.__str__(), TestingUtils.get_response_string('send_code.json'))
         self.__test_object(res)
 
         self.assertTrue(m.called)
 
     @requests_mock.Mocker()
     def test_xml_response(self, m):
-        TestingUtils.intercept_mock_request(m, 'send_code.xml', '/verify/req', 'POST')
+        TestingUtils.intercept_mock_request(
+            m, 'send_code.xml', '/verify/req', 'POST')
 
         client = TestingUtils.get_client_obj()
         res = client.verify_request.send({
@@ -96,14 +122,16 @@ class TestVerifyRequest(TestCase):
             'mocean-resp-format': 'xml'
         })
 
-        self.assertEqual(res.__str__(), TestingUtils.get_response_string('send_code.xml'))
+        self.assertEqual(
+            res.__str__(), TestingUtils.get_response_string('send_code.xml'))
         self.__test_object(res)
 
         self.assertTrue(m.called)
 
     @requests_mock.Mocker()
     def test_required_field_not_set(self, m):
-        TestingUtils.intercept_mock_request(m, 'send_code.json', '/verify/req', 'POST')
+        TestingUtils.intercept_mock_request(
+            m, 'send_code.json', '/verify/req', 'POST')
 
         client = TestingUtils.get_client_obj()
         try:
@@ -117,4 +145,5 @@ class TestVerifyRequest(TestCase):
     def __test_object(self, verify_request_response):
         self.assertIsInstance(verify_request_response.toDict(), dict)
         self.assertEqual(verify_request_response.status, '0')
-        self.assertEqual(verify_request_response.reqid, 'CPASS_restapi_C0000002737000000.0002')
+        self.assertEqual(verify_request_response.reqid,
+                         'CPASS_restapi_C0000002737000000.0002')
