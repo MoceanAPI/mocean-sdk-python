@@ -19,7 +19,7 @@ setuptools.setup(
     install_requires=["requests>=2.20,<2.26",
                       "xmltodict~=0.12.0", "dotmap~=1.3.0", "future~=0.18.2"],
     extras_require={
-        'test': ['requests-mock>=1.6,<1.9'],
+        'test': ['requests-mock>=1.6,<1.10'],
     },
     packages=setuptools.find_packages(exclude=['tests', 'tests.*']),
     platforms=['any'],
