@@ -11,7 +11,7 @@ name = "moceansdk"
 
 
 class Client(object):
-    SDK_VERSION = '1.1.0'
+    SDK_VERSION = '1.1.2'
 
     def __init__(self, obj_auth, options=None):
         if not isinstance(obj_auth, AbstractAuth):
@@ -19,7 +19,8 @@ class Client(object):
 
         if obj_auth.get_auth_method().lower() == 'basic':
             if not obj_auth.get_params()['mocean-api-key'] or not obj_auth.get_params()['mocean-api-secret']:
-                raise RequiredFieldException("Api key and api secret for client object can't be empty.")
+                raise RequiredFieldException(
+                    "Api key and api secret for client object can't be empty.")
         else:
             raise MoceanErrorException("unsupported auth method")
 
@@ -74,3 +75,8 @@ class Client(object):
     def voice(self):
         from moceansdk.modules.voice.voice import Voice
         return Voice(self._obj_auth, self._transmitter)
+
+    @property
+    def command(self):
+        from moceansdk.modules.command.command import Command
+        return Command(self._obj_auth, self._transmitter)

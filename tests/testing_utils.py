@@ -25,7 +25,8 @@ class TestingUtils(TestCase):
 
     @staticmethod
     def get_response_string(file_name):
-        file_handler = open(TestingUtils.get_resource_file_path(file_name), 'r')
+        file_handler = open(
+            TestingUtils.get_resource_file_path(file_name), 'r')
         file_content = ''.join(file_handler.read().splitlines())
         file_handler.close()
         return file_content

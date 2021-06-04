@@ -79,4 +79,5 @@ class TestVerifyValidate(TestingUtils):
     def __test_object(self, verify_validate_response):
         self.assertIsInstance(verify_validate_response.toDict(), dict)
         self.assertEqual(verify_validate_response.status, '0')
-        self.assertEqual(verify_validate_response.reqid, 'CPASS_restapi_C0000002737000000.0002')
+        self.assertEqual(verify_validate_response.reqid,
+                         'CPASS_restapi_C0000002737000000.0002')

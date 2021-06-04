@@ -23,19 +23,23 @@ class TestVerifyRequest(TestingUtils):
 
         verify_request.set_code_length("test code length")
         self.assertIsNotNone(verify_request._params["mocean-code-length"])
-        self.assertEqual("test code length", verify_request._params["mocean-code-length"])
+        self.assertEqual("test code length",
+                         verify_request._params["mocean-code-length"])
 
         verify_request.set_template("test template")
         self.assertIsNotNone(verify_request._params["mocean-template"])
-        self.assertEqual("test template", verify_request._params["mocean-template"])
+        self.assertEqual(
+            "test template", verify_request._params["mocean-template"])
 
         verify_request.set_pin_validity("test pin validity")
         self.assertIsNotNone(verify_request._params["mocean-pin-validity"])
-        self.assertEqual("test pin validity", verify_request._params["mocean-pin-validity"])
+        self.assertEqual("test pin validity",
+                         verify_request._params["mocean-pin-validity"])
 
         verify_request.set_next_event_wait("test next event wait")
         self.assertIsNotNone(verify_request._params["mocean-next-event-wait"])
-        self.assertEqual("test next event wait", verify_request._params["mocean-next-event-wait"])
+        self.assertEqual("test next event wait",
+                         verify_request._params["mocean-next-event-wait"])
 
         verify_request.set_resp_format("json")
         self.assertIsNotNone(verify_request._params["mocean-resp-format"])
@@ -53,6 +57,23 @@ class TestVerifyRequest(TestingUtils):
         self.assertEqual(verify_request._channel, Channel.AUTO)
         verify_request.send_as(Channel.SMS)
         self.assertEqual(verify_request._channel, Channel.SMS)
+        verify_request.send({
+            'mocean-to': 'testing to',
+            'mocean-brand': 'testing brand'
+        })
+
+        self.assertTrue(m.called)
+
+    @requests_mock.Mocker()
+    def test_send_as_telegram_channel(self, m):
+        TestingUtils.intercept_mock_request(
+            m, 'send_code.json', '/verify/req/telegram', 'POST')
+
+        client = TestingUtils.get_client_obj()
+        verify_request = client.verify_request
+        self.assertEqual(verify_request._channel, Channel.AUTO)
+        verify_request.send_as(Channel.TELEGRAM)
+        self.assertEqual(verify_request._channel, Channel.TELEGRAM)
         verify_request.send({
             'mocean-to': 'testing to',
             'mocean-brand': 'testing brand'
@@ -135,4 +156,5 @@ class TestVerifyRequest(TestingUtils):
     def __test_object(self, verify_request_response):
         self.assertIsInstance(verify_request_response.toDict(), dict)
         self.assertEqual(verify_request_response.status, '0')
-        self.assertEqual(verify_request_response.reqid, 'CPASS_restapi_C0000002737000000.0002')
+        self.assertEqual(verify_request_response.reqid,
+                         'CPASS_restapi_C0000002737000000.0002')

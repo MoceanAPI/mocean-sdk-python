@@ -2,6 +2,7 @@ MoceanAPI Client Library for Python
 ============================
 [![Latest Stable Version](https://img.shields.io/pypi/v/moceansdk.svg)](https://pypi.org/project/moceansdk/)
 [![Build Status](https://img.shields.io/travis/com/MoceanAPI/mocean-sdk-python.svg)](https://travis-ci.com/MoceanAPI/mocean-sdk-python)
+[![Github Build Status](https://github.com/MoceanAPI/mocean-sdk-python/actions/workflows/build.yml/badge.svg)](https://github.com/MoceanAPI/mocean-sdk-python/actions/workflows/build.yml)
 [![codecov](https://img.shields.io/codecov/c/github/MoceanAPI/mocean-sdk-python.svg)](https://codecov.io/gh/MoceanAPI/mocean-sdk-python)
 [![codacy](https://img.shields.io/codacy/grade/7ec97a7559f146928875fdaf28e1882e.svg)](https://app.codacy.com/project/MoceanAPI/mocean-sdk-python/dashboard)
 [![license](https://img.shields.io/pypi/l/moceansdk.svg)](https://pypi.org/project/moceansdk/)
@@ -70,7 +71,7 @@ License
 
 This library is released under the [MIT License][license]
 
-[signup]: https://dashboard.moceanapi.com/register?medium=github&campaign=sdk-python
+[signup]: https://dashboard.moceanapi.com/register?medium=github&campaign=python-sdk
 [doc_main]: https://moceanapi.com/docs/?python
 [doc_sms]: https://moceanapi.com/docs/?python#send-sms
 [license]: LICENSE.txt

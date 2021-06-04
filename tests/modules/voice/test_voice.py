@@ -20,7 +20,8 @@ class TestVoice(TestingUtils):
 
         voice.set_mocean_command('test mocean command')
         self.assertIsNotNone(voice._params['mocean-command'])
-        self.assertEqual('test mocean command', voice._params['mocean-command'])
+        self.assertEqual('test mocean command',
+                         voice._params['mocean-command'])
 
         voice.set_resp_format('json')
         self.assertIsNotNone(voice._params['mocean-resp-format'])
@@ -30,13 +31,15 @@ class TestVoice(TestingUtils):
         voice = self.get_client_obj().voice
         voice.set_mocean_command([{'action': 'say'}])
         self.assertIsNotNone(voice._params['mocean-command'])
-        self.assertEqual(json.dumps([{'action': 'say'}]), voice._params['mocean-command'])
+        self.assertEqual(json.dumps(
+            [{'action': 'say'}]), voice._params['mocean-command'])
 
         voice = self.get_client_obj().voice
         builder_params = McBuilder().add(Mc.say("hello world"))
         voice.set_mocean_command(builder_params)
         self.assertIsNotNone(voice._params['mocean-command'])
-        self.assertEqual(json.dumps(builder_params.build()), voice._params['mocean-command'])
+        self.assertEqual(json.dumps(builder_params.build()),
+                         voice._params['mocean-command'])
 
         voice = self.get_client_obj().voice
         mc_params = Mc.say('hello world')
@@ -136,5 +139,7 @@ class TestVoice(TestingUtils):
         self.assertIsInstance(voice_response.toDict(), dict)
         self.assertEqual(voice_response.calls[0].status, '0')
         self.assertEqual(voice_response.calls[0].receiver, '60123456789')
-        self.assertEqual(voice_response.calls[0]['session-uuid'], 'xxx-xxx-xxx-xxx')
-        self.assertEqual(voice_response.calls[0]['call-uuid'], 'xxx-xxx-xxx-xxx')
+        self.assertEqual(
+            voice_response.calls[0]['session_uuid'], 'xxx-xxx-xxx-xxx')
+        self.assertEqual(
+            voice_response.calls[0]['call_uuid'], 'xxx-xxx-xxx-xxx')

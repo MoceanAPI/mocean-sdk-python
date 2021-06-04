@@ -165,4 +165,5 @@ class TestSms(TestingUtils):
         self.assertIsInstance(sms_response.toDict(), dict)
         self.assertEqual(sms_response.messages[0].status, '0')
         self.assertEqual(sms_response.messages[0].receiver, '60123456789')
-        self.assertEqual(sms_response.messages[0].msgid, 'CPASS_restapi_C0000002737000000.0001')
+        self.assertEqual(
+            sms_response.messages[0].msgid, 'CPASS_restapi_C0000002737000000.0001')

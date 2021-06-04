@@ -78,16 +78,21 @@ class TestNumberLookup(TestingUtils):
     def __test_object(self, number_lookup_response):
         self.assertIsInstance(number_lookup_response.toDict(), dict)
         self.assertEqual(number_lookup_response.status, '0')
-        self.assertEqual(number_lookup_response.msgid, 'CPASS_restapi_C00000000000000.0002')
+        self.assertEqual(number_lookup_response.msgid,
+                         'CPASS_restapi_C00000000000000.0002')
         self.assertEqual(number_lookup_response.to, '60123456789')
         self.assertEqual(number_lookup_response.current_carrier.country, 'MY')
-        self.assertEqual(number_lookup_response.current_carrier.name, 'U Mobile')
-        self.assertEqual(number_lookup_response.current_carrier.network_code, '50218')
+        self.assertEqual(
+            number_lookup_response.current_carrier.name, 'U Mobile')
+        self.assertEqual(
+            number_lookup_response.current_carrier.network_code, '50218')
         self.assertEqual(number_lookup_response.current_carrier.mcc, '502')
         self.assertEqual(number_lookup_response.current_carrier.mnc, '18')
         self.assertEqual(number_lookup_response.original_carrier.country, 'MY')
-        self.assertEqual(number_lookup_response.original_carrier.name, 'Maxis Mobile')
-        self.assertEqual(number_lookup_response.original_carrier.network_code, '50212')
+        self.assertEqual(
+            number_lookup_response.original_carrier.name, 'Maxis Mobile')
+        self.assertEqual(
+            number_lookup_response.original_carrier.network_code, '50212')
         self.assertEqual(number_lookup_response.original_carrier.mcc, '502')
         self.assertEqual(number_lookup_response.original_carrier.mnc, '12')
         self.assertEqual(number_lookup_response.ported, 'ported')

@@ -35,7 +35,8 @@ class TestCollect(TestCase):
             'timeout': 10000
         }
 
-        self.assertEqual('collect', Collect(params).get_request_data()['action'])
+        self.assertEqual('collect', Collect(
+            params).get_request_data()['action'])
 
     def test_if_required_field_not_set(self):
         try:
