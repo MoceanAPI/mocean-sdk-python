@@ -82,6 +82,28 @@ class TestCommand(TestingUtils):
         self.assertTrue(m.called)
 
     @requests_mock.Mocker()
+    def test_mocean_header_adder(self, m):
+        def request_callback(request, _context):
+            self.assertEqual(request.method, 'POST')
+            self.verify_param_with(request.body, {'mocean-to': 'test to',
+                                                  'mocean-command': 'test mocean call control commands'})
+            return self.get_response_string('command.json')
+
+        self.mock_http_request(m, '/send-message', request_callback)
+
+        client = TestingUtils.get_client_obj()
+        res = client.command.execute({
+            'to': 'test to',
+            'command': 'test mocean call control commands'
+        })
+
+        self.assertEqual(
+            res.__str__(), TestingUtils.get_response_string('command.json'))
+        self.__test_object(res)
+
+        self.assertTrue(m.called)
+
+    @requests_mock.Mocker()
     def test_required_field_not_set(self, m):
         def request_callback(_request, _context):
             return self.get_response_string('comamnd.json')
