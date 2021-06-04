@@ -152,4 +152,3 @@ class TestMc(TestCase):
                          'content']['type'])
         self.assertEqual('hello!', send_sms.get_request_data()[
                          'content']['text'])
-

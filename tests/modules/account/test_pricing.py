@@ -1,14 +1,12 @@
-from unittest import TestCase
-
 import requests_mock
 
 from moceansdk.modules.transmitter import Transmitter
 from tests.testing_utils import TestingUtils
 
 
-class TestPricing(TestCase):
+class TestPricing(TestingUtils):
     def test_setter_method(self):
-        pricing = TestingUtils.get_client_obj().pricing
+        pricing = self.get_client_obj().pricing
 
         pricing.set_mcc('test mcc')
         self.assertIsNotNone(pricing._params['mocean-mcc'])
@@ -28,38 +26,42 @@ class TestPricing(TestCase):
 
     @requests_mock.Mocker()
     def test_json_inquiry(self, m):
-        TestingUtils.intercept_mock_request(
-            m, 'price.json', '/account/pricing')
+        def request_callback(request, _context):
+            self.assertEqual(request.method, 'GET')
+            return self.get_response_string('price.json')
 
-        client = TestingUtils.get_client_obj()
+        self.mock_http_request(m, '/account/pricing', request_callback)
+
+        client = self.get_client_obj()
         res = client.pricing.inquiry()
-        self.assertEqual(
-            res.__str__(), TestingUtils.get_response_string('price.json'))
+        self.assertEqual(res.__str__(), self.get_response_string('price.json'))
         self.__test_object(res)
 
         self.assertTrue(m.called)
 
     @requests_mock.Mocker()
     def test_xml_inquiry(self, m):
-        TestingUtils.intercept_mock_request(
-            m, 'price.xml', '/account/pricing', version='1')
+        def request_callback(_request, _context):
+            return self.get_response_string('price.xml')
 
-        client = TestingUtils.get_client_obj(Transmitter({'version': '1'}))
+        self.mock_http_request(m, '/account/pricing', request_callback, '1')
+
+        client = self.get_client_obj(Transmitter({'version': '1'}))
         res = client.pricing.inquiry({'mocean-resp-format': 'xml'})
 
-        self.assertEqual(
-            res.__str__(), TestingUtils.get_response_string('price.xml'))
+        self.assertEqual(res.__str__(), self.get_response_string('price.xml'))
         self.__test_object(res)
 
         # v2 test
-        TestingUtils.intercept_mock_request(
-            m, 'price_v2.xml', '/account/pricing')
+        def request_callback_v2(_request, _context):
+            return self.get_response_string('price_v2.xml')
 
-        client = TestingUtils.get_client_obj()
+        self.mock_http_request(m, '/account/pricing', request_callback_v2)
+
+        client = self.get_client_obj()
         res = client.pricing.inquiry({'mocean-resp-format': 'xml'})
 
-        self.assertEqual(
-            res.__str__(), TestingUtils.get_response_string('price_v2.xml'))
+        self.assertEqual(res.__str__(), self.get_response_string('price_v2.xml'))
         self.__test_object(res)
 
         self.assertEqual(m.call_count, 2)

@@ -1,5 +1,3 @@
-from unittest import TestCase
-
 import requests_mock
 
 from moceansdk import RequiredFieldException
@@ -7,9 +5,9 @@ from moceansdk.modules.message.channel import Channel
 from tests.testing_utils import TestingUtils
 
 
-class TestVerifyRequest(TestCase):
+class TestVerifyRequest(TestingUtils):
     def test_setter_method(self):
-        verify_request = TestingUtils.get_client_obj().verify_request
+        verify_request = self.get_client_obj().verify_request
 
         verify_request.set_to("test to")
         self.assertIsNotNone(verify_request._params["mocean-to"])
@@ -49,10 +47,12 @@ class TestVerifyRequest(TestCase):
 
     @requests_mock.Mocker()
     def test_send_as_sms_channel(self, m):
-        TestingUtils.intercept_mock_request(
-            m, 'send_code.json', '/verify/req/sms', 'POST')
+        def request_callback(_request, _context):
+            return self.get_response_string('send_code.json')
 
-        client = TestingUtils.get_client_obj()
+        self.mock_http_request(m, '/verify/req/sms', request_callback)
+
+        client = self.get_client_obj()
         verify_request = client.verify_request
         self.assertEqual(verify_request._channel, Channel.AUTO)
         verify_request.send_as(Channel.SMS)
@@ -66,9 +66,10 @@ class TestVerifyRequest(TestCase):
 
     @requests_mock.Mocker()
     def test_send_as_telegram_channel(self, m):
-        TestingUtils.intercept_mock_request(
-            m, 'send_code.json', '/verify/req/telegram', 'POST')
+        def request_callback(_request, _context):
+            return self.get_response_string('send_code.json')
 
+        self.mock_http_request(m, '/verify/req/telegram', request_callback)
         client = TestingUtils.get_client_obj()
         verify_request = client.verify_request
         self.assertEqual(verify_request._channel, Channel.AUTO)
@@ -83,10 +84,14 @@ class TestVerifyRequest(TestCase):
 
     @requests_mock.Mocker()
     def test_resend(self, m):
-        TestingUtils.intercept_mock_request(
-            m, 'send_code.json', '/verify/resend/sms', 'POST')
+        def request_callback(request, _context):
+            self.assertEqual(request.method, 'POST')
+            self.verify_param_with(request.body, {'mocean-reqid': 'testing req id'})
+            return self.get_response_string('send_code.json')
 
-        client = TestingUtils.get_client_obj()
+        self.mock_http_request(m, '/verify/resend/sms', request_callback)
+
+        client = self.get_client_obj()
         client.verify_request.resend({
             'mocean-reqid': 'testing req id'
         })
@@ -95,45 +100,52 @@ class TestVerifyRequest(TestCase):
 
     @requests_mock.Mocker()
     def test_json_send(self, m):
-        TestingUtils.intercept_mock_request(
-            m, 'send_code.json', '/verify/req', 'POST')
+        def request_callback(request, _context):
+            self.assertEqual(request.method, 'POST')
+            self.verify_param_with(request.body, {'mocean-to': 'test to',
+                                                  'mocean-brand': 'test brand'})
+            return self.get_response_string('send_code.json')
 
-        client = TestingUtils.get_client_obj()
+        self.mock_http_request(m, '/verify/req', request_callback)
+
+        client = self.get_client_obj()
         res = client.verify_request.send({
             'mocean-to': 'test to',
             'mocean-brand': 'test brand'
         })
 
-        self.assertEqual(
-            res.__str__(), TestingUtils.get_response_string('send_code.json'))
+        self.assertEqual(res.__str__(), self.get_response_string('send_code.json'))
         self.__test_object(res)
 
         self.assertTrue(m.called)
 
     @requests_mock.Mocker()
     def test_xml_response(self, m):
-        TestingUtils.intercept_mock_request(
-            m, 'send_code.xml', '/verify/req', 'POST')
+        def request_callback(_request, _context):
+            return self.get_response_string('send_code.xml')
 
-        client = TestingUtils.get_client_obj()
+        self.mock_http_request(m, '/verify/req', request_callback)
+
+        client = self.get_client_obj()
         res = client.verify_request.send({
             'mocean-to': 'test to',
             'mocean-brand': 'test brand',
             'mocean-resp-format': 'xml'
         })
 
-        self.assertEqual(
-            res.__str__(), TestingUtils.get_response_string('send_code.xml'))
+        self.assertEqual(res.__str__(), self.get_response_string('send_code.xml'))
         self.__test_object(res)
 
         self.assertTrue(m.called)
 
     @requests_mock.Mocker()
     def test_required_field_not_set(self, m):
-        TestingUtils.intercept_mock_request(
-            m, 'send_code.json', '/verify/req', 'POST')
+        def request_callback(_request, _context):
+            return self.get_response_string('send_code.json')
 
-        client = TestingUtils.get_client_obj()
+        self.mock_http_request(m, '/verify/req', request_callback)
+
+        client = self.get_client_obj()
         try:
             client.verify_request.send()
             self.fail()

@@ -37,6 +37,7 @@ jobs:
       run: |
         coverage run --omit="tests/*" -m unittest discover
     - name: Upload code coverage
+      if: ${{ matrix.python-version == '3.9' }}
       run: |
         codecov
 

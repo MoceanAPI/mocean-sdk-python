@@ -4,8 +4,8 @@ from moceansdk.modules.command.mc_object import AbstractMc
 
 class TgRequestContact(AbstractMc):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, param=None):
+        super().__init__(param)
         self.set_button_text('Share button')
 
     def action(self):

@@ -6,9 +6,9 @@ from moceansdk import RequiredFieldException
 from tests.testing_utils import TestingUtils
 
 
-class TestNumberLookup(TestCase):
+class TestNumberLookup(TestingUtils):
     def test_setter_method(self):
-        number_lookup = TestingUtils.get_client_obj().number_lookup
+        number_lookup = self.get_client_obj().number_lookup
 
         number_lookup.set_to('test to')
         self.assertIsNotNone(number_lookup._params['mocean-to'])
@@ -24,43 +24,49 @@ class TestNumberLookup(TestCase):
 
     @requests_mock.Mocker()
     def test_json_inquiry(self, m):
-        TestingUtils.intercept_mock_request(
-            m, 'number_lookup.json', '/nl', 'POST')
+        def request_callback(request, _context):
+            self.assertEqual(request.method, 'POST')
+            self.verify_param_with(request.body, {'mocean-to': 'test to'})
+            return self.get_response_string('number_lookup.json')
 
-        client = TestingUtils.get_client_obj()
+        self.mock_http_request(m, '/nl', request_callback)
+
+        client = self.get_client_obj()
         res = client.number_lookup.inquiry({
             'mocean-to': 'test to'
         })
 
-        self.assertEqual(
-            res.__str__(), TestingUtils.get_response_string('number_lookup.json'))
+        self.assertEqual(res.__str__(), self.get_response_string('number_lookup.json'))
         self.__test_object(res)
 
         self.assertTrue(m.called)
 
     @requests_mock.Mocker()
     def test_xml_inquiry(self, m):
-        TestingUtils.intercept_mock_request(
-            m, 'number_lookup.xml', '/nl', 'POST')
+        def request_callback(_request, _context):
+            return self.get_response_string('number_lookup.xml')
 
-        client = TestingUtils.get_client_obj()
+        self.mock_http_request(m, '/nl', request_callback)
+
+        client = self.get_client_obj()
         res = client.number_lookup.inquiry({
             'mocean-to': 'test to',
             'mocean-resp-format': 'xml'
         })
 
-        self.assertEqual(
-            res.__str__(), TestingUtils.get_response_string('number_lookup.xml'))
+        self.assertEqual(res.__str__(), self.get_response_string('number_lookup.xml'))
         self.__test_object(res)
 
         self.assertTrue(m.called)
 
     @requests_mock.Mocker()
     def test_required_field_not_set(self, m):
-        TestingUtils.intercept_mock_request(
-            m, 'number_lookup.json', '/nl', 'POST')
+        def request_callback(_request, _context):
+            return self.get_response_string('number_lookup.json')
 
-        client = TestingUtils.get_client_obj()
+        self.mock_http_request(m, '/nl', request_callback)
+
+        client = self.get_client_obj()
         try:
             client.number_lookup.inquiry()
             self.fail()

@@ -1,5 +1,3 @@
-from unittest import TestCase
-
 import requests_mock
 
 from moceansdk import RequiredFieldException
@@ -7,9 +5,9 @@ from moceansdk.modules.transmitter import Transmitter
 from tests.testing_utils import TestingUtils
 
 
-class TestSms(TestCase):
+class TestSms(TestingUtils):
     def test_setter_method(self):
-        sms = TestingUtils.get_client_obj().sms
+        sms = self.get_client_obj().sms
 
         sms.set_from("test from")
         self.assertIsNotNone(sms._params["mocean-from"])
@@ -72,9 +70,13 @@ class TestSms(TestCase):
 
     @requests_mock.Mocker()
     def test_send_flash_sms(self, m):
-        TestingUtils.intercept_mock_request(m, 'message.json', '/sms', 'POST')
+        def request_callback(request, _context):
+            self.verify_param_with(request.body, {'mocean-mclass': '1', 'mocean-alt-dcs': '1'})
+            return self.get_response_string('message.json')
 
-        client = TestingUtils.get_client_obj()
+        self.mock_http_request(m, '/sms', request_callback)
+
+        client = self.get_client_obj()
         client.flash_sms.send({
             'mocean-from': 'test from',
             'mocean-to': 'test to',
@@ -83,33 +85,37 @@ class TestSms(TestCase):
 
         self.assertTrue(m.called)
 
-        parameters = TestingUtils.convert_qs_to_dict(m.last_request.body)
-        self.assertTrue('mocean-mclass' in parameters)
-        self.assertTrue('mocean-alt-dcs' in parameters)
-
     @requests_mock.Mocker()
     def test_json_send(self, m):
-        TestingUtils.intercept_mock_request(m, 'message.json', '/sms', 'POST')
+        def request_callback(request, _context):
+            self.assertEqual(request.method, 'POST')
+            self.verify_param_with(request.body, {'mocean-from': 'test from',
+                                                  'mocean-to': 'test to',
+                                                  'mocean-text': 'test text'})
+            return self.get_response_string('message.json')
 
-        client = TestingUtils.get_client_obj()
+        self.mock_http_request(m, '/sms', request_callback)
+
+        client = self.get_client_obj()
         res = client.sms.send({
             'mocean-from': 'test from',
             'mocean-to': 'test to',
             'mocean-text': 'test text'
         })
 
-        self.assertEqual(
-            res.__str__(), TestingUtils.get_response_string('message.json'))
+        self.assertEqual(res.__str__(), self.get_response_string('message.json'))
         self.__test_object(res)
 
         self.assertTrue(m.called)
 
     @requests_mock.Mocker()
     def test_xml_send(self, m):
-        TestingUtils.intercept_mock_request(
-            m, 'message.xml', '/sms', 'POST', '1')
+        def request_callback(_request, _context):\
+            return self.get_response_string('message.xml')
 
-        client = TestingUtils.get_client_obj(Transmitter({'version': '1'}))
+        self.mock_http_request(m, '/sms', request_callback, '1')
+
+        client = self.get_client_obj(Transmitter({'version': '1'}))
         res = client.sms.send({
             'mocean-from': 'test from',
             'mocean-to': 'test to',
@@ -117,15 +123,16 @@ class TestSms(TestCase):
             'mocean-resp-format': 'xml'
         })
 
-        self.assertEqual(
-            res.__str__(), TestingUtils.get_response_string('message.xml'))
+        self.assertEqual(res.__str__(), self.get_response_string('message.xml'))
         self.__test_object(res)
 
         # v2 test
-        TestingUtils.intercept_mock_request(
-            m, 'message_v2.xml', '/sms', 'POST')
+        def request_callback_v2(_request, _context):
+            return self.get_response_string('message_v2.xml')
 
-        client = TestingUtils.get_client_obj()
+        self.mock_http_request(m, '/sms', request_callback_v2)
+
+        client = self.get_client_obj()
         res = client.sms.send({
             'mocean-from': 'test from',
             'mocean-to': 'test to',
@@ -133,17 +140,19 @@ class TestSms(TestCase):
             'mocean-resp-format': 'xml'
         })
 
-        self.assertEqual(
-            res.__str__(), TestingUtils.get_response_string('message_v2.xml'))
+        self.assertEqual(res.__str__(), self.get_response_string('message_v2.xml'))
         self.__test_object(res)
 
         self.assertEqual(m.call_count, 2)
 
     @requests_mock.Mocker()
     def test_required_field_not_set(self, m):
-        TestingUtils.intercept_mock_request(m, 'message.json', '/sms', 'POST')
+        def request_callback(_request, _context):
+            return self.get_response_string('message.json')
 
-        client = TestingUtils.get_client_obj()
+        self.mock_http_request(m, '/sms', request_callback)
+
+        client = self.get_client_obj()
         try:
             client.sms.send()
             self.fail()

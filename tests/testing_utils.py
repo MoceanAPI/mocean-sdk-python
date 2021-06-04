@@ -1,5 +1,8 @@
 import os
 import sys
+from unittest import TestCase
+
+import requests_mock
 
 from moceansdk import Client, Basic
 from moceansdk.modules import Transmitter
@@ -10,7 +13,7 @@ elif (2, 0) <= sys.version_info < (3, 0):
     from urlparse import parse_qs as url_parser
 
 
-class TestingUtils(object):
+class TestingUtils(TestCase):
     @staticmethod
     def get_client_obj(transmitter=None):
         return Client(Basic("test api key", "test api secret"), transmitter)
@@ -29,12 +32,14 @@ class TestingUtils(object):
         return file_content
 
     @staticmethod
-    def intercept_mock_request(m, file_name, uri, method='GET', version='2', headers=None):
-        if headers is None:
-            headers = {}
+    def mock_http_request(m, uri, response_callback, version='2'):
+        m.register_uri(requests_mock.ANY, Transmitter.default_options()['base_url'] + "/rest/" + version + uri,
+                       text=response_callback)
 
-        m.request(method, Transmitter.default_options()['base_url'] + "/rest/" + version + uri,
-                  text=TestingUtils.get_response_string(file_name), headers=headers)
+    def verify_param_with(self, body, expected_body):
+        parsed_body = self.convert_qs_to_dict(body)
+        for key in expected_body:
+            self.assertEqual(parsed_body[key], [expected_body[key]])
 
     @staticmethod
     def convert_qs_to_dict(qs):

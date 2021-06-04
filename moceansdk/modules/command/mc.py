@@ -1,4 +1,5 @@
-from moceansdk.modules.command.mc_object import tg_send_text, tg_send_animation, tg_send_audio, tg_send_document, tg_send_photo, tg_send_video, tg_request_contact, send_sms
+from moceansdk.modules.command.mc_object import tg_send_text, tg_send_animation,\
+    tg_send_audio, tg_send_document, tg_send_photo, tg_send_video, tg_request_contact, send_sms
 
 
 class Mc():

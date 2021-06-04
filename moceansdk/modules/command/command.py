@@ -34,7 +34,7 @@ class Command(AbstractClient):
     #     return self
 
     def execute(self, params=None):
-        if params == None:
+        if params is None:
             params = {}
 
         if 'mocean-command' in params:
