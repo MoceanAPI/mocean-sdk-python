@@ -30,7 +30,6 @@ class TestTgSendAnimation(TestCase):
 
         self.assertEqual(params, req.get_request_data())
 
-
     def test_if_action_auto_defined(self):
         params = {
             "action": "send-telegram",
@@ -48,10 +47,8 @@ class TestTgSendAnimation(TestCase):
                 "text": "test text"
             }
         }
-        self.assertEqual('send-telegram', TgSendAnimation(
-            params).get_request_data()['action'])
-        self.assertEqual('animation', TgSendAnimation(
-            params).get_request_data()['content']['type'])
+        self.assertEqual('send-telegram', TgSendAnimation(params).get_request_data()['action'])
+        self.assertEqual('animation', TgSendAnimation(params).get_request_data()['content']['type'])
 
     def test_if_required_field_not_set(self):
         try:
