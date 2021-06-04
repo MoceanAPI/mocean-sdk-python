@@ -30,6 +30,28 @@ class TestTgSendText(TestCase):
 
         self.assertEqual(params, req.get_request_data())
 
+    def test_if_action_auto_defined(self):
+        params = {
+            "action": "send-telegram",
+            "from": {
+                "type": "bot_username",
+                "id": "bot id"
+            },
+            "to": {
+                "type": "chat_id",
+                "id": "chat id"
+            },
+            "content": {
+                "type": "audio",
+                "rich_media_url": "url",
+                "text": "test text"
+            }
+        }
+        self.assertEqual('send-telegram', TgSendAudio(
+            params).get_request_data()['action'])
+        self.assertEqual('audio', TgSendAudio(
+            params).get_request_data()['content']['type'])
+
     def test_if_required_field_not_set(self):
         try:
             TgSendAudio().get_request_data()

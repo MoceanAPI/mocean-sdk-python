@@ -30,6 +30,28 @@ class TestTgSendText(TestCase):
 
         self.assertEqual(params, req.get_request_data())
 
+    def test_if_action_auto_defined(self):
+        params = {
+            "action": "send-telegram",
+            "from": {
+                "type": "bot_username",
+                "id": "bot id"
+            },
+            "to": {
+                "type": "chat_id",
+                "id": "chat id"
+            },
+            "content": {
+                "type": "document",
+                "rich_media_url": "test url",
+                "text": "test text"
+            }
+        }
+        self.assertEqual('send-telegram', TgSendDocument(
+            params).get_request_data()['action'])
+        self.assertEqual('document', TgSendDocument(
+            params).get_request_data()['content']['type'])
+
     def test_if_required_field_not_set(self):
         try:
             TgSendDocument().get_request_data()
