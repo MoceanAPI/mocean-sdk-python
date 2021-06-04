@@ -66,9 +66,10 @@ class TestVerifyRequest(TestingUtils):
 
     @requests_mock.Mocker()
     def test_send_as_telegram_channel(self, m):
-        TestingUtils.intercept_mock_request(
-            m, 'send_code.json', '/verify/req/telegram', 'POST')
+        def request_callback(_request, _context):
+            return self.get_response_string('send_code.json')
 
+        self.mock_http_request(m, '/verify/req/telegram', request_callback)
         client = TestingUtils.get_client_obj()
         verify_request = client.verify_request
         self.assertEqual(verify_request._channel, Channel.AUTO)

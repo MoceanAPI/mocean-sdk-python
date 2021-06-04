@@ -1,4 +1,4 @@
-from unittest import TestCase
+from tests.testing_utils import TestingUtils
 
 import requests_mock
 import json
@@ -6,10 +6,9 @@ import json
 from moceansdk import RequiredFieldException
 from moceansdk.modules.command.mc import Mc
 from moceansdk.modules.command.mc_builder import McBuilder
-from tests.testing_utils import TestingUtils
 
 
-class TestCommand(TestCase):
+class TestCommand(TestingUtils):
     def test_setter_method(self):
         command = TestingUtils.get_client_obj().command
 
@@ -62,8 +61,13 @@ class TestCommand(TestCase):
 
     @requests_mock.Mocker()
     def test_json_execute(self, m):
-        TestingUtils.intercept_mock_request(
-            m, 'command.json', '/send-message', 'POST')
+        def request_callback(request, _context):
+            self.assertEqual(request.method, 'POST')
+            self.verify_param_with(request.body, {'mocean-to': 'test to',
+                                                  'mocean-command': 'test mocean call control commands'})
+            return self.get_response_string('command.json')
+
+        self.mock_http_request(m, '/send-message', request_callback)
 
         client = TestingUtils.get_client_obj()
         res = client.command.execute({
@@ -79,12 +83,12 @@ class TestCommand(TestCase):
 
     @requests_mock.Mocker()
     def test_required_field_not_set(self, m):
-        TestingUtils.intercept_mock_request(
-            m, 'command.json', '/send-message', 'POST')
+        def request_callback(_request, _context):
+            return self.get_response_string('comamnd.json')
 
         client = TestingUtils.get_client_obj()
         try:
-            client.voice.call()
+            client.command.execute()
             self.fail()
         except RequiredFieldException:
             pass
