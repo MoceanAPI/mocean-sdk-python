@@ -17,7 +17,7 @@ setuptools.setup(
     author_email='support@moceanapi.com',
     license='MIT',
     install_requires=["requests>=2.20,<2.33", "urllib3>=1.26,<3",
-                      "xmltodict>=0.12,<0.14", "dotmap~=1.3.0", "future>=0.18.2,<1.1.0"],
+                      "xmltodict>=0.12,<0.15", "dotmap~=1.3.0", "future>=0.18.2,<1.1.0"],
     extras_require={
         'test': ['requests-mock>=1.6,<1.13'],
     },
