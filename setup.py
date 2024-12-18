@@ -8,7 +8,7 @@ with io.open(os.path.join(os.path.dirname(__file__), "README.md"), encoding='utf
 
 setuptools.setup(
     name='moceansdk',
-    version='1.1.4',
+    version='1.1.5',
     description='Mocean Client Library for Python',
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -29,5 +29,6 @@ setuptools.setup(
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.13',
     ]
 )
