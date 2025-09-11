@@ -103,19 +103,19 @@ class TestCommand(TestingUtils):
 
         self.assertTrue(m.called)
 
-    # @requests_mock.Mocker()
-    # def test_required_field_not_set(self, m):
-    #     def request_callback(_request, _context):
-    #         return self.get_response_string('comamnd.json')
+    @requests_mock.Mocker()
+    def test_required_field_not_set(self, m):
+        def request_callback(_request, _context):
+            return self.get_response_string('comamnd.json')
 
-    #     client = TestingUtils.get_client_obj()
-    #     try:
-    #         client.command.execute()
-    #         self.fail()
-    #     except RequiredFieldException:
-    #         pass
+        client = TestingUtils.get_client_obj()
+        try:
+            client.command.execute()
+            self.fail()
+        except RequiredFieldException:
+            pass
 
-    #     self.assertFalse(m.called)
+        self.assertFalse(m.called)
 
     def __test_object(self, command_response):
         self.assertIsInstance(command_response.toDict(), dict)

@@ -6,8 +6,7 @@ class VerifyRequest(AbstractClient):
 
     def __init__(self, obj_auth, transmitter):
         super(VerifyRequest, self).__init__(obj_auth, transmitter)
-        self._required_fields = ['mocean-api-key',
-                                 'mocean-api-secret', 'mocean-to', 'mocean-brand']
+        self._required_fields = ['mocean-to', 'mocean-brand']
         self._channel = Channel.AUTO
         self.__is_resend = False
 
@@ -53,7 +52,8 @@ class VerifyRequest(AbstractClient):
 
         super(VerifyRequest, self).create(params)
         self.create_final_params()
-        #self.is_required_field_set()
+        self.is_required_field_set()
+        self.is_api_key_secret_or_token_set()
 
         verify_request_url = "/verify"
         if self.__is_resend:
@@ -72,7 +72,6 @@ class VerifyRequest(AbstractClient):
     def resend(self, params=None):
         self.send_as(Channel.SMS)
         self.__is_resend = True
-        self._required_fields = ['mocean-api-key',
-                                 'mocean-api-secret', 'mocean-reqid']
+        self._required_fields = ['mocean-reqid']
 
         return self.send(params)

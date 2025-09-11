@@ -59,21 +59,21 @@ class TestNumberLookup(TestingUtils):
 
         self.assertTrue(m.called)
 
-    # @requests_mock.Mocker()
-    # def test_required_field_not_set(self, m):
-    #     def request_callback(_request, _context):
-    #         return self.get_response_string('number_lookup.json')
+    @requests_mock.Mocker()
+    def test_required_field_not_set(self, m):
+        def request_callback(_request, _context):
+            return self.get_response_string('number_lookup.json')
 
-    #     self.mock_http_request(m, '/nl', request_callback)
+        self.mock_http_request(m, '/nl', request_callback)
 
-    #     client = self.get_client_obj()
-    #     try:
-    #         client.number_lookup.inquiry()
-    #         self.fail()
-    #     except RequiredFieldException:
-    #         pass
+        client = self.get_client_obj()
+        try:
+            client.number_lookup.inquiry()
+            self.fail()
+        except RequiredFieldException:
+            pass
 
-    #     self.assertFalse(m.called)
+        self.assertFalse(m.called)
 
     def __test_object(self, number_lookup_response):
         self.assertIsInstance(number_lookup_response.toDict(), dict)

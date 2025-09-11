@@ -5,19 +5,19 @@ from moceansdk import Basic, RequiredFieldException, Client, MoceanErrorExceptio
 
 class TestClient(TestCase):
     def setUp(self):
-        self.basic = Basic("test api key", "test api secret")
+        self.basic = Basic(api_key="test api key", api_secret="test api secret")
 
     def test_client_creation_error_when_no_api_key_or_api_secret(self):
         self.assertRaises(RequiredFieldException, Client, Basic())
-        self.assertRaises(RequiredFieldException, Client, Basic("", ""))
+        self.assertRaises(RequiredFieldException, Client, Basic(api_key="", api_secret=""))
         self.assertRaises(RequiredFieldException, Client,
-                          Basic("test api key", ""))
+                          Basic("api_key=test api key", api_secret=""))
         self.assertRaises(RequiredFieldException, Client,
-                          Basic("", "test api secret"))
+                          Basic(api_key="", api_secret="test api secret"))
         self.assertRaises(RequiredFieldException, Client,
-                          Basic("test api key", None))
+                          Basic(api_key="test api key", api_secret=None))
         self.assertRaises(RequiredFieldException, Client,
-                          Basic(None, "test api secret"))
+                          Basic(api_key=None, api_secret="test api secret"))
 
     def test_able_to_construct_client_obj(self):
         try:
@@ -33,6 +33,12 @@ class TestClient(TestCase):
             self.fail('created client with unsupported credential')
         except MoceanErrorException:
             pass
+
+    def test_able_to_construct_client_obj_with_token(self):
+        try:
+            Client(Basic(api_token="test api token"))
+        except Exception as ex:
+            self.fail(ex)
 
 
 class DummyCredential(AbstractAuth):

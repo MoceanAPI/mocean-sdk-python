@@ -6,7 +6,7 @@ class VerifyValidate(AbstractClient):
     def __init__(self, obj_auth, transmitter):
         super(VerifyValidate, self).__init__(obj_auth, transmitter)
         self._required_fields = [
-            'mocean-api-key', 'mocean-api-secret', 'mocean-reqid', 'mocean-code']
+            'mocean-reqid', 'mocean-code']
 
     def set_reqid(self, param):
         self._params['mocean-reqid'] = param
@@ -26,7 +26,8 @@ class VerifyValidate(AbstractClient):
 
         super(VerifyValidate, self).create(params)
         self.create_final_params()
-        #self.is_required_field_set()
+        self.is_required_field_set()
+        self.is_api_key_secret_or_token_set()
 
         response = self._transmitter.post('/verify/check', self._params)
         return response

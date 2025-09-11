@@ -16,7 +16,7 @@ elif (2, 0) <= sys.version_info < (3, 0):
 class TestingUtils(TestCase):
     @staticmethod
     def get_client_obj(transmitter=None):
-        return Client(Basic("test api key", "test api secret"), transmitter)
+        return Client(Basic(api_key="test api key", api_secret="test api secret"), transmitter)
 
     @staticmethod
     def get_resource_file_path(file_name):
