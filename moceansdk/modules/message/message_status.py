@@ -22,7 +22,7 @@ class MessageStatus(AbstractClient):
         super(MessageStatus, self).create(params)
         self.create_final_params()
         self.is_required_field_set()
-        self.is_api_key_secret_or_token_set()
+        self.is_api_credentials_set()
 
         response = self._transmitter.get('/report/message', self._params)
         return response

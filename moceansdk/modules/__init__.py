@@ -33,7 +33,7 @@ class AbstractClient(object):
             if x not in self._params:
                 raise RequiredFieldException("%s is mandatory field" % x)
                 
-    def is_api_key_secret_or_token_set(self):
+    def is_api_credentials_set(self):
         if (self._params['mocean-api-token'] == "" and 'mocean-api-key' not in self._params and 'mocean-api-secret' not in self._params):
             raise RequiredFieldException("Missing api token")
         

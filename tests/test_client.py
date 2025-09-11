@@ -11,7 +11,7 @@ class TestClient(TestCase):
         self.assertRaises(RequiredFieldException, Client, Basic())
         self.assertRaises(RequiredFieldException, Client, Basic(api_key="", api_secret=""))
         self.assertRaises(RequiredFieldException, Client,
-                          Basic("api_key=test api key", api_secret=""))
+                          Basic(api_key="test api key", api_secret=""))
         self.assertRaises(RequiredFieldException, Client,
                           Basic(api_key="", api_secret="test api secret"))
         self.assertRaises(RequiredFieldException, Client,

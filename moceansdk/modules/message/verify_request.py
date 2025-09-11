@@ -53,7 +53,7 @@ class VerifyRequest(AbstractClient):
         super(VerifyRequest, self).create(params)
         self.create_final_params()
         self.is_required_field_set()
-        self.is_api_key_secret_or_token_set()
+        self.is_api_credentials_set()
 
         verify_request_url = "/verify"
         if self.__is_resend:

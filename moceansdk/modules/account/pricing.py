@@ -30,6 +30,6 @@ class Pricing(AbstractClient):
         super(Pricing, self).create(params)
         self.create_final_params()
         self.is_required_field_set()
-        self.is_api_key_secret_or_token_set()
+        self.is_api_credentials_set()
 
         return self._transmitter.get('/account/pricing', self._params)

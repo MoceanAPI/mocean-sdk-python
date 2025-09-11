@@ -49,7 +49,7 @@ class Voice(AbstractClient):
         super(Voice, self).create(params)
         self.create_final_params()
         self.is_required_field_set()
-        self.is_api_key_secret_or_token_set()
+        self.is_api_credentials_set()
 
         response = self._transmitter.post('/voice/dial', self._params)
         return response
@@ -60,7 +60,7 @@ class Voice(AbstractClient):
         super(Voice, self).create({'mocean-call-uuid': call_uuid})
         self.create_final_params()
         self.is_required_field_set()
-        self.is_api_key_secret_or_token_set()
+        self.is_api_credentials_set()
 
         response = self._transmitter.post('/voice/hangup', self._params)
         return response
@@ -71,7 +71,7 @@ class Voice(AbstractClient):
         super(Voice, self).create({'mocean-call-uuid': call_uuid})
         self.create_final_params()
         self.is_required_field_set()
-        self.is_api_key_secret_or_token_set()
+        self.is_api_credentials_set()
 
         response = self._transmitter.send('get', '/voice/rec', self._params)
 
