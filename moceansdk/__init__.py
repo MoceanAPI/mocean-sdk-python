@@ -18,9 +18,9 @@ class Client(object):
             raise MoceanErrorException("auth object must extend AbstractAuth")
 
         if obj_auth.get_auth_method().lower() == 'basic':
-            if not obj_auth.get_params()['mocean-api-key'] or not obj_auth.get_params()['mocean-api-secret']:
+            if (not obj_auth.get_params()['mocean-api-key'] or not obj_auth.get_params()['mocean-api-secret']) and not obj_auth.get_params()['mocean-api-token']:
                 raise RequiredFieldException(
-                    "Api key and api secret for client object can't be empty.")
+                    "Api key or api secret and api token for client object can't be empty.")
         else:
             raise MoceanErrorException("unsupported auth method")
 

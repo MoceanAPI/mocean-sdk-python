@@ -41,11 +41,15 @@ class Transmitter(object):
             '/rest/' + self._options['version'] + uri
         res = None
 
+        headers = {
+            "Authorization": "Bearer "+params["mocean-api-token"]
+        }
+
         if method.lower() == 'get':
             res = self._options['request_session'].get(
-                url, params=params or {})
+                url, params=params, headers=headers or {})
         elif method.lower() == 'post':
-            res = self._options['request_session'].post(url, data=params or {})
+            res = self._options['request_session'].post(url, data=params, headers=headers or {})
 
         cloned_res_before_close = res
         self._options['request_session'].close()

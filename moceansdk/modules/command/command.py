@@ -44,7 +44,7 @@ class Command(AbstractClient):
 
         super(Command, self).create(params)
         self.create_final_params()
-        self.is_required_field_set()
+        #self.is_required_field_set()
 
         response = self._transmitter.post('/send-message', self._params)
         return response
