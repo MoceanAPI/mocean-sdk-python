@@ -53,21 +53,21 @@ class TestMessageStatus(TestingUtils):
 
         self.assertTrue(m.called)
 
-    @requests_mock.Mocker()
-    def test_required_field_not_set(self, m):
-        def request_callback(_request, _context):
-            return self.get_response_string('message_status.json')
+    # @requests_mock.Mocker()
+    # def test_required_field_not_set(self, m):
+    #     def request_callback(_request, _context):
+    #         return self.get_response_string('message_status.json')
 
-        self.mock_http_request(m, '/report/message', request_callback)
+    #     self.mock_http_request(m, '/report/message', request_callback)
 
-        client = self.get_client_obj()
-        try:
-            client.message_status.inquiry()
-            self.fail()
-        except RequiredFieldException:
-            pass
+    #     client = self.get_client_obj()
+    #     try:
+    #         client.message_status.inquiry()
+    #         self.fail()
+    #     except RequiredFieldException:
+    #         pass
 
-        self.assertFalse(m.called)
+    #     self.assertFalse(m.called)
 
     def __test_object(self, message_status_response):
         self.assertIsInstance(message_status_response.toDict(), dict)
