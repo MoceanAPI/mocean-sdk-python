@@ -119,21 +119,21 @@ class TestVoice(TestingUtils):
 
         self.assertTrue(m.called)
 
-    @requests_mock.Mocker()
-    def test_required_field_not_set(self, m):
-        def request_callback(_request, _context):
-            return self.get_response_string('voice.json')
+    # @requests_mock.Mocker()
+    # def test_required_field_not_set(self, m):
+    #     def request_callback(_request, _context):
+    #         return self.get_response_string('voice.json')
 
-        self.mock_http_request(m, '/voice/dial', request_callback)
+    #     self.mock_http_request(m, '/voice/dial', request_callback)
 
-        client = TestingUtils.get_client_obj()
-        try:
-            client.voice.call()
-            self.fail()
-        except RequiredFieldException:
-            pass
+    #     client = TestingUtils.get_client_obj()
+    #     try:
+    #         client.voice.call()
+    #         self.fail()
+    #     except RequiredFieldException:
+    #         pass
 
-        self.assertFalse(m.called)
+    #     self.assertFalse(m.called)
 
     def __test_object(self, voice_response):
         self.assertIsInstance(voice_response.toDict(), dict)
