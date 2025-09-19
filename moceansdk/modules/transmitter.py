@@ -78,9 +78,18 @@ class Transmitter(object):
             .replace("</verify_check>", "")
         )
 
-        if 'status' in processed_response and processed_response['status'] != '0':
-            raise MoceanErrorException(
-                processed_response['err_msg'], processed_response.set_raw_response(raw_response))
+        if uri == '/sms':
+            if 'status' in processed_response.messages[0] and processed_response.messages[0]['status'] != '0':
+                raise MoceanErrorException(
+                    processed_response['err_msg'], processed_response.set_raw_response(raw_response))
+        elif uri == '/voice/dial':
+            if 'status' in processed_response.calls[0] and processed_response.calls[0]['status'] != '0':
+                raise MoceanErrorException(
+                    processed_response['err_msg'], processed_response.set_raw_response(raw_response))
+        else:
+            if 'status' in processed_response and processed_response['status'] != '0':
+                raise MoceanErrorException(
+                    processed_response['err_msg'], processed_response.set_raw_response(raw_response))
 
         # post process response
         if uri == '/account/pricing' and is_xml:
