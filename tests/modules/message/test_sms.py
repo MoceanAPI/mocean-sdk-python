@@ -145,21 +145,21 @@ class TestSms(TestingUtils):
 
         self.assertEqual(m.call_count, 2)
 
-    # @requests_mock.Mocker()
-    # def test_required_field_not_set(self, m):
-    #     def request_callback(_request, _context):
-    #         return self.get_response_string('message.json')
+    @requests_mock.Mocker()
+    def test_required_field_not_set(self, m):
+        def request_callback(_request, _context):
+            return self.get_response_string('message.json')
 
-    #     self.mock_http_request(m, '/sms', request_callback)
+        self.mock_http_request(m, '/sms', request_callback)
 
-    #     client = self.get_client_obj()
-    #     try:
-    #         client.sms.send()
-    #         self.fail()
-    #     except RequiredFieldException:
-    #         pass
+        client = self.get_client_obj()
+        try:
+            client.sms.send()
+            self.fail()
+        except RequiredFieldException:
+            pass
 
-    #     self.assertFalse(m.called)
+        self.assertFalse(m.called)
 
     def __test_object(self, sms_response):
         self.assertIsInstance(sms_response.toDict(), dict)

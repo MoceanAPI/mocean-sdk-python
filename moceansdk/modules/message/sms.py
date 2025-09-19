@@ -6,7 +6,7 @@ class Sms(AbstractClient):
     def __init__(self, obj_auth, transmitter):
         super(Sms, self).__init__(obj_auth, transmitter)
         self._required_fields = [
-            'mocean-api-key', 'mocean-api-secret', 'mocean-text', 'mocean-from', 'mocean-to']
+            'mocean-text', 'mocean-from', 'mocean-to']
 
     def set_from(self, param):
         self._params['mocean-from'] = param
@@ -80,7 +80,8 @@ class Sms(AbstractClient):
 
         super(Sms, self).create(params)
         self.create_final_params()
-        #self.is_required_field_set()
+        self.is_required_field_set()
+        self.is_api_credentials_set()
 
         response = self._transmitter.post('/sms', self._params)
         return response

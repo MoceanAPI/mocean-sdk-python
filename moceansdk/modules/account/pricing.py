@@ -5,7 +5,7 @@ class Pricing(AbstractClient):
 
     def __init__(self, obj_auth, transmitter):
         super(Pricing, self).__init__(obj_auth, transmitter)
-        self._required_fields = ['mocean-api-key', 'mocean-api-secret']
+        self._required_fields = []
 
     def set_mcc(self, param):
         self._params['mocean-mcc'] = param
@@ -29,6 +29,7 @@ class Pricing(AbstractClient):
 
         super(Pricing, self).create(params)
         self.create_final_params()
-        #self.is_required_field_set()
+        self.is_required_field_set()
+        self.is_api_credentials_set()
 
         return self._transmitter.get('/account/pricing', self._params)

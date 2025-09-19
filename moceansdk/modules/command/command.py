@@ -10,8 +10,7 @@ class Command(AbstractClient):
     def __init__(self, obj_auth, transmitter):
         super(Command, self).__init__(obj_auth, transmitter)
         self.channel = channel.TELEGRAM
-        self._required_fields = ['mocean-api-key',
-                                 'mocean-api-secret', 'mocean-command']
+        self._required_fields = ['mocean-command']
 
     def set_event_url(self, event_url):
         self._params['mocean-event-url'] = event_url
@@ -44,7 +43,8 @@ class Command(AbstractClient):
 
         super(Command, self).create(params)
         self.create_final_params()
-        #self.is_required_field_set()
+        self.is_required_field_set()
+        self.is_api_credentials_set()
 
         response = self._transmitter.post('/send-message', self._params)
         return response

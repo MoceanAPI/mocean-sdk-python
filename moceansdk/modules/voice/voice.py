@@ -10,8 +10,7 @@ class Voice(AbstractClient):
 
     def __init__(self, obj_auth, transmitter):
         super(Voice, self).__init__(obj_auth, transmitter)
-        self._required_fields = ['mocean-api-key',
-                                 'mocean-api-secret', 'mocean-to']
+        self._required_fields = ['mocean-to']
 
     def set_to(self, to):
         self._params['mocean-to'] = to
@@ -49,29 +48,30 @@ class Voice(AbstractClient):
 
         super(Voice, self).create(params)
         self.create_final_params()
-        #self.is_required_field_set()
+        self.is_required_field_set()
+        self.is_api_credentials_set()
 
         response = self._transmitter.post('/voice/dial', self._params)
         return response
 
     def hangup(self, call_uuid):
-        self._required_fields = ['mocean-api-key',
-                                 'mocean-api-secret', 'mocean-call-uuid']
+        self._required_fields = ['mocean-call-uuid']
 
         super(Voice, self).create({'mocean-call-uuid': call_uuid})
         self.create_final_params()
-        #self.is_required_field_set()
+        self.is_required_field_set()
+        self.is_api_credentials_set()
 
         response = self._transmitter.post('/voice/hangup', self._params)
         return response
 
     def recording(self, call_uuid):
-        self._required_fields = ['mocean-api-key',
-                                 'mocean-api-secret', 'mocean-call-uuid']
+        self._required_fields = ['mocean-call-uuid']
 
         super(Voice, self).create({'mocean-call-uuid': call_uuid})
         self.create_final_params()
-        #self.is_required_field_set()
+        self.is_required_field_set()
+        self.is_api_credentials_set()
 
         response = self._transmitter.send('get', '/voice/rec', self._params)
 
