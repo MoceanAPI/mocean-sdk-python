@@ -24,9 +24,10 @@ pip install moceansdk
 ```
 
 ## Usage
+### For version >=1.2.0
 There are 2 ways to connect to MoceanAPI
 
-Option 1: Create a client with your API token:
+Option 1: Create a client with your API token
 
 ```python
 from moceansdk import Client, Basic
@@ -35,12 +36,22 @@ credential = Basic(api_token="API_TOKEN_HERE")
 mocean = Client(credential)
 ```
 
-Option 2 (legacy): Create a client with your API key and secret:
+Option 2 (legacy): Create a client with your API key and secret
 
 ```python
 from moceansdk import Client, Basic
 
 credential = Basic(api_key="API_KEY_HERE", api_secret="API_SECRET_HERE")
+mocean = Client(credential)
+```
+
+### For version <1.2.0
+Create a client with your API key and secret:
+
+```python
+from moceansdk import Client, Basic
+
+credential = Basic("API_KEY_HERE", "API_SECRET_HERE")
 mocean = Client(credential)
 ```
 
