@@ -65,6 +65,8 @@ class VerifyRequest(AbstractClient):
             verify_request_url += "/sms"
         elif self._channel == Channel.TELEGRAM:
             verify_request_url += "/telegram"
+        elif self._channel == Channel.EMAIL:
+            verify_request_url += "/email"
 
         response = self._transmitter.post(verify_request_url, self._params)
         return response
